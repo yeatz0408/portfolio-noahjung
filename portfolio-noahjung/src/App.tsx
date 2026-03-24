@@ -6,12 +6,10 @@ import './App.css'
 import Home from './pages/Home.tsx'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
+    <div className="p-10 bg-red-500 text-white text-3xl">
       <Home />
-    </>
+    </div>
   )
 }
 
