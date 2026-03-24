@@ -7,7 +7,7 @@ import Home from './pages/Home.tsx'
 
 function App() {
   return (
-    <div className="p-10 bg-red-500 text-white text-3xl">
+    <div className="min-h-screen w-full bg-[url('./assets/img/paper-texture.jpg')] bg-repeat bg-auto">
       <Home />
     </div>
   )
