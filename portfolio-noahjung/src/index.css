@@ -75,7 +75,7 @@ body {
   margin: 0;
   padding: 0;
 
-  background-image: url('./assets/img/paper-texture.jpg');
+  background-color: white;
   background-repeat: repeat;
   background-size: cover;
 }
@@ -83,14 +83,14 @@ body {
 h1,
 h2 {
   font-family: var(--heading);
-  font-weight: 500;
   color: var(--text-h);
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
+  font-size: 84px;
+  letter-spacing: 5px;
   margin: 32px 0;
+  font-weight: 500;
 
   @media (max-width: 1024px) {
     font-size: 36px;
@@ -99,7 +99,7 @@ h1 {
 }
 
 h2 {
-  font-size: 24px;
+  font-size: 36px;
   line-height: 118%;
   letter-spacing: -0.24px;
   margin: 0 0 8px;
