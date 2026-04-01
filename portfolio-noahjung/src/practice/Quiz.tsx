@@ -8,46 +8,52 @@ const Quiz: React.FC = () => {
     const [input1, setInput1] = useState<string>("")
     const [input2, setInput2] = useState<string>("")
 
-    const [isSuccess, setIsSuccess] = useState<boolean>(false)
-    const [resultText, setResultText] = useState<string>("Try the quiz")
+    const [checked, setChecked] = useState<boolean>(false)
 
-    const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const [message, setMessage] = useState<string>("Try the quiz")
+
+    const handleInput1 = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput1(event.target.value)
     }
-
-    const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInput2 = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInput2(event.target.value)
     }
-
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target.checked)
+    }
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        alert(isSuccess)
+        alert(`${input1} ${input2} ${checked}`)
     }
 
     useEffect(() => {
+
         if (input1 === answer1 && input2 === answer2) {
-            setIsSuccess(true)
-            setResultText("CORRECT")
+            setMessage("CORRECT")
         } else {
-            setIsSuccess(false)
-            setResultText("INCORRECT")
+            setMessage("INCORRECT")
         }
     }, [input1, input2])
 
-
     return (
         <div>
+            <h1>Test Area</h1>
             <form onSubmit={handleSubmit}>
-                <label>Input 1</label>
-                <input type="text" value={input1} onChange={handleChange1} />
-                <label>Input 2</label>
-                <input type="text" value={input2} onChange={handleChange2} />
+                <div>
+                    <label className="mr-10">Input 1</label>
+                    <input type="text" value={input1} onChange={handleInput1} />
+                </div>
+                <div>
+                    <label className="mr-10">Input 2</label>
+                    <input type="text" value={input2} onChange={handleInput2} />
+                </div>
+                <div>
+                    <label className="mr-10">True or False?</label>
+                    <input type="checkbox" checked={checked} onChange={handleChecked} />
+                </div>
                 <button type="submit">Submit</button>
             </form>
-            <div>
-                {resultText}
-            </div>
-
+            <h1>{message}</h1>
         </div>
     )
 }
