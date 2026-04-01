@@ -10,16 +10,15 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
     size = DEFAULT_SIZE
 }) => {
     if (!src) return null
-
     const filterId = "brush-filter"
     const maskId = "brush-mask"
 
     return (
         <div style={{ width: size, height: size, position: 'relative' }}>
-            <svg width="0" height="0" style={{ position: 'absolute' }}>
+            <svg width="0" height="0">
                 <defs>
                     <filter id={filterId}>
-                        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" result="noise" />
+                        <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="4" result="noise" />
                         <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" />
                     </filter>
 
@@ -35,6 +34,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
                     </mask>
                 </defs>
             </svg>
+            {fadeInCSS}
             <img
                 src={src}
                 style={{
@@ -44,11 +44,29 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
                     WebkitMaskImage: `url(#${maskId})`,
                     maskImage: `url(#${maskId})`
                 }}
+                className="fadeIn-img"
             />
         </div>
     )
 }
 
 const DEFAULT_SIZE = 300
+
+const fadeInCSS = (
+    <style>
+        {`
+      .fadeIn-img {
+        opacity: 0;
+        animation: fadeIn 2.5s ease-in;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes fadeIn {
+        0%, 100% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+    `}
+    </style>
+);
 
 export default ImageContainer

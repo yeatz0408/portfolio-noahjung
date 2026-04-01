@@ -1,7 +1,11 @@
 import React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { answer1, answer2 } from "./answerText"
 
+interface inputIterable {
+    key: string;
+    input: string;
+}
 
 const Quiz: React.FC = () => {
 
@@ -35,6 +39,11 @@ const Quiz: React.FC = () => {
         }
     }, [input1, input2])
 
+
+    const inputs = useMemo<inputIterable[]>(() => {
+        return [{ key: "1", input: input1 }, { key: "2", input: input2 }]
+    }, [input1, input2])
+
     return (
         <div>
             <h1>Test Area</h1>
@@ -54,6 +63,9 @@ const Quiz: React.FC = () => {
                 <button type="submit">Submit</button>
             </form>
             <h1>{message}</h1>
+            <br></br>
+            <br></br>
+            {inputs.map(item => <div key={item.key}>{item.input}</div>)}
         </div>
     )
 }
