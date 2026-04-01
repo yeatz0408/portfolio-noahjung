@@ -14,45 +14,39 @@ type SizedImagesProps = {
 
 const TechCarousel: React.FC = () => {
     return (
-        <div className="gap-1 overflow-x-auto overflow-y-hidden">
-            <div className="inline-block">
-                <SizedImages
-                    src={java}
-                    width={75}
-                    height={100} />
-            </div>
-            <div className="inline-block">
-                <SizedImages
-                    src={springboot}
-                    width={210}
-                    height={90} />
-            </div>
-            <div className="inline-block">
-                <SizedImages
-                    src={javascript}
-                    width={90}
-                    height={90} />
-            </div>
-            <div className="inline-block"
-                style={{ transform: 'translate(-60px, 35px)' }}>
+        <div className="flex items-center overflow-x-auto overflow-y-hidden">
+            <SizedImages
+                src={java}
+                width={75}
+                height={100} />
+            <SizedImages
+                src={springboot}
+                width={210}
+                height={90} />
+            <SizedImages
+                src={javascript}
+                width={90}
+                height={90} />
+            <div
+                style={{ transform: 'translate(-60px, 0px)' }}>
                 <SizedImages
                     src={typescript}
                     width={275}
                     height={160} />
             </div>
-            <div className="inline-block"
+            <div
                 style={{ transform: 'translate(-150px)' }}>
                 <SizedImages
                     src={react}
                     width={140}
                     height={90} />
             </div>
-            <div className="inline-block"
-                style={{ transform: 'translate(-165px, 10px)' }}>
+            <div
+                style={{ transform: 'translate(-165px)' }}>
                 <SizedImages
                     src={postgresql}
                     width={150}
-                    height={100} />
+                    height={105} />
             </div>
         </div>
     )

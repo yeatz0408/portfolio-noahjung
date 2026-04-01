@@ -6,12 +6,12 @@ import TechCarousel from "../component/TechCarousel"
 const Home: React.FC = () => {
     return (
         <div className="pt-10">
-            <h1>Noah Jung,</h1><br />
+            <h1>Noah Jung</h1><br />
             <h2>Fullstack Web Developer</h2><br />
             <div className="w-full flex justify-center">
                 <ImageContainer src={fuji} size={350} />
             </div>
-            <div className="mx-20 mb-20">
+            <div className="mx-20 mt-20">
                 <TechCarousel />
             </div>
 
