@@ -5,6 +5,8 @@ import javascript from "../assets/img/tech/javascript.png"
 import typescript from "../assets/img/tech/typescript.png"
 import react from "../assets/img/tech/react.png"
 import postgresql from "../assets/img/tech/postgresql.jpg"
+import elasticsearch from "../assets/img/tech/elasticsearch.png"
+import docker from "../assets/img/tech/docker.png"
 import mybatis from "../assets/img/tech/mybatis.jpg"
 import zustand from "../assets/img/tech/zustand.png"
 
@@ -22,8 +24,10 @@ const TechCarousel: React.FC = () => {
         { src: typescript, width: 140, height: 80 },
         { src: react, width: 140, height: 90 },
         { src: postgresql, width: 130, height: 105 },
+        { src: elasticsearch, width: 130, height: 90 },
         { src: mybatis, width: 150, height: 90 },
         { src: zustand, width: 150, height: 90 },
+        { src: docker, width: 150, height: 90 },
     ]
 
     const loopItems = [...items, ...items]

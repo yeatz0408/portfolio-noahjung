@@ -48,8 +48,8 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
             const draw = () => {
                 if (x <= 0 || y <= 0) return
 
-                y -= 7.5  // The position when drawing is over
-                x -= 5 + Math.sin(t) * 20  // The width of zig-zag
+                y -= 14  // The position when drawing is over
+                x -= 5 + Math.sin(t) * 30  // The width of zig-zag
                 t += 0.5  // The time
                 drawBrush(x, y)
                 setTimeout(() => { requestAnimationFrame(draw) }, 20)
