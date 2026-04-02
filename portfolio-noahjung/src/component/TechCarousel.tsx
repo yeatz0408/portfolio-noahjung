@@ -5,6 +5,8 @@ import javascript from "../assets/img/tech/javascript.png"
 import typescript from "../assets/img/tech/typescript.png"
 import react from "../assets/img/tech/react.png"
 import postgresql from "../assets/img/tech/postgresql.jpg"
+import mybatis from "../assets/img/tech/mybatis.jpg"
+import zustand from "../assets/img/tech/zustand.png"
 
 type SizedImagesProps = {
     src: string;
@@ -17,9 +19,11 @@ const TechCarousel: React.FC = () => {
         { src: java, width: 75, height: 100 },
         { src: springboot, width: 210, height: 90 },
         { src: javascript, width: 90, height: 90 },
-        { src: typescript, width: 275, height: 160 },
+        { src: typescript, width: 140, height: 80 },
         { src: react, width: 140, height: 90 },
-        { src: postgresql, width: 150, height: 105 },
+        { src: postgresql, width: 130, height: 105 },
+        { src: mybatis, width: 150, height: 90 },
+        { src: zustand, width: 150, height: 90 },
     ]
 
     const loopItems = [...items, ...items]

@@ -57,7 +57,7 @@ const fadeInCSS = (
         {`
       .fadeIn-img {
         opacity: 0;
-        animation: fadeIn 2.5s ease-in;
+        animation: fadeIn 5s ease-in;
         animation-fill-mode: forwards;
       }
 

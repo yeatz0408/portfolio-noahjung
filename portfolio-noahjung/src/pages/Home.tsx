@@ -11,7 +11,7 @@ const Home: React.FC = () => {
             <div className="w-full flex justify-center">
                 <ImageContainer src={fuji} size={350} />
             </div>
-            <div className="mx-20 mt-20">
+            <div className="mx-20 mt-10">
                 <TechCarousel />
             </div>
 
