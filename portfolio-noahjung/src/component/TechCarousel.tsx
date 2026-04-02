@@ -6,9 +6,10 @@ import typescript from "../assets/img/tech/typescript.png"
 import react from "../assets/img/tech/react.png"
 import postgresql from "../assets/img/tech/postgresql.jpg"
 import elasticsearch from "../assets/img/tech/elasticsearch.png"
-import docker from "../assets/img/tech/docker.png"
 import mybatis from "../assets/img/tech/mybatis.jpg"
 import zustand from "../assets/img/tech/zustand.png"
+import docker from "../assets/img/tech/docker.png"
+import aws from "../assets/img/tech/aws.png"
 
 type SizedImagesProps = {
     src: string;
@@ -18,6 +19,8 @@ type SizedImagesProps = {
 
 const TechCarousel: React.FC = () => {
     const items = [
+        { src: aws, width: 140, height: 100 },
+        { src: docker, width: 150, height: 90 },
         { src: java, width: 75, height: 100 },
         { src: springboot, width: 210, height: 90 },
         { src: javascript, width: 90, height: 90 },
@@ -27,7 +30,6 @@ const TechCarousel: React.FC = () => {
         { src: elasticsearch, width: 130, height: 90 },
         { src: mybatis, width: 150, height: 90 },
         { src: zustand, width: 150, height: 90 },
-        { src: docker, width: 150, height: 90 },
     ]
 
     const loopItems = [...items, ...items]
