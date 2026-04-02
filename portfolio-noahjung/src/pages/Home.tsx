@@ -6,10 +6,11 @@ import TechCarousel from "../component/TechCarousel"
 const Home: React.FC = () => {
     return (
         <div className="pt-10">
-            <h1>Noah Jung</h1><br />
-            <h2>Fullstack Web Developer</h2><br />
+            {fadeInCSS}
+            <h1 className="fadeIn-img">Noah Jung</h1><br />
+            <h2 className="fadeIn-img">Fullstack Web Developer</h2><br />
             <div className="w-full flex justify-center">
-                <ImageContainer src={fuji} size={350} />
+                <ImageContainer src={fuji} size={450} />
             </div>
             <div className="mx-20 mt-10">
                 <TechCarousel />
@@ -19,4 +20,23 @@ const Home: React.FC = () => {
     )
 }
 
+const fadeInCSS = (
+    <style>
+        {`
+      .fadeIn-img {
+        opacity: 0;
+        animation: fadeIn 2s ease-in;
+        animation-fill-mode: forwards;
+      }
+
+      @keyframes fadeIn {
+        0%, 100% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+    `}
+    </style>
+);
+
 export default Home
+
+
