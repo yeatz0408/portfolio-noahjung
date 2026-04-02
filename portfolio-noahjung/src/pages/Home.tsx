@@ -12,7 +12,7 @@ const Home: React.FC = () => {
             <div className="w-full flex justify-center">
                 <ImageContainer src={fuji} size={450} />
             </div>
-            <div className="mx-20 mt-10">
+            <div className="fadeIn-img2 mx-20 mt-7.5">
                 <TechCarousel />
             </div>
 
@@ -27,6 +27,13 @@ const fadeInCSS = (
         opacity: 0;
         animation: fadeIn 2s ease-in;
         animation-fill-mode: forwards;
+      }
+
+      .fadeIn-img2 {
+        opacity: 0;
+        animation: fadeIn 2s ease-in;
+        animation-fill-mode: forwards;
+        animation-delay: 3.5s;
       }
 
       @keyframes fadeIn {
