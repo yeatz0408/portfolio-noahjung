@@ -13,40 +13,45 @@ type SizedImagesProps = {
 }
 
 const TechCarousel: React.FC = () => {
+    const items = [
+        { src: java, width: 75, height: 100 },
+        { src: springboot, width: 210, height: 90 },
+        { src: javascript, width: 90, height: 90 },
+        { src: typescript, width: 275, height: 160 },
+        { src: react, width: 140, height: 90 },
+        { src: postgresql, width: 150, height: 105 },
+    ]
+
+    const loopItems = [...items, ...items]
+
     return (
-        <div className="flex items-center overflow-x-auto overflow-y-hidden">
-            <SizedImages
-                src={java}
-                width={75}
-                height={100} />
-            <SizedImages
-                src={springboot}
-                width={210}
-                height={90} />
-            <SizedImages
-                src={javascript}
-                width={90}
-                height={90} />
-            <div
-                style={{ transform: 'translate(-60px, 0px)' }}>
-                <SizedImages
-                    src={typescript}
-                    width={275}
-                    height={160} />
-            </div>
-            <div
-                style={{ transform: 'translate(-150px)' }}>
-                <SizedImages
-                    src={react}
-                    width={140}
-                    height={90} />
-            </div>
-            <div
-                style={{ transform: 'translate(-165px)' }}>
-                <SizedImages
-                    src={postgresql}
-                    width={150}
-                    height={105} />
+        <div className="relative overflow-hidden">
+            <style>{`
+                @keyframes techScroll {
+                    from { transform: translateX(0); }
+                    to { transform: translateX(-50%); }
+                }
+
+                .tech-carousel-track {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    width: max-content;
+                    animation: techScroll 30s linear infinite;
+                }
+
+                .tech-carousel-item img {
+                    display: block;
+                    object-fit: contain;
+                }
+            `}</style>
+
+            <div className="tech-carousel-track">
+                {loopItems.map((item, idx) => (
+                    <div className="tech-carousel-item" key={`${idx}-${item.src}`}>
+                        <SizedImages src={item.src} width={item.width} height={item.height} />
+                    </div>
+                ))}
             </div>
         </div>
     )
