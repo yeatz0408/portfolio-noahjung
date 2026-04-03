@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from "react-router-dom"
 import { useUIStore } from "../store/useStore";
 
@@ -34,8 +34,9 @@ const NavPane: React.FC = () => {
         },
     ]
 
-    const handleRouting = (uri: string) => {
-        navigate(`/${uri}`)
+    const handleRouting = (info: SiteMapInfo) => {
+        setPageId(info.uri)
+        navigate(`/${info.uri}`)
     }
 
     return (<>
@@ -48,7 +49,7 @@ const NavPane: React.FC = () => {
             <div className={classes.stack}>
                 {
                     siteMapInfos && siteMapInfos.map((info, idx) => (
-                        <button onClick={() => handleRouting(info.uri)} className={classes.btn} key={`${idx}-${info.uri}`}>{info.label}</button>
+                        <button onClick={() => handleRouting(info)} className={info.uri === pageId ? classes.activeBtn : classes.btn} key={`${idx}-${info.uri}`}>{info.label}</button>
                     ))
                 }
             </div>
@@ -61,6 +62,7 @@ const classes = {
     stack: "flex flex-col gap-2",
     btn: "w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 transition-all hover:bg-sky-200/50 hover:text-sky-800 hover:translate-x-1 cursor-pointer",
     toggleBtn: `absolute left-full top-[10%] h-[10vh] px-2 bg-sky-50 border-y border-r border-sky-200 rounded-r-md text-xs font-medium text-sky-500 hover:text-sky-800 transition-colors cursor-pointer [writing-mode:vertical-rl]`,
+    activeBtn: "w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold bg-sky-500 text-white shadow-md shadow-sky-200 ring-1 ring-sky-600/10 cursor-default",
 }
 
 export default NavPane
