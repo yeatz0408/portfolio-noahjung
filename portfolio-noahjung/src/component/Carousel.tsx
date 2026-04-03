@@ -66,7 +66,7 @@ const TechCarousel = ({
                 ))}
                 {textItems && textItems.map((item, idx) => (
                     <div key={`${idx}-${item.topText}-${item.mainText}-${item.subText}`}>
-                        <SizedTexts topText={item.topText} mainText={item.mainText} subText={item.subText} />
+                        <SizedTexts topText={item.topText} mainText={item.mainText} subText={item.subText} color={item.color} />
                     </div>
                 ))}
             </div>
@@ -99,11 +99,11 @@ function SizedTexts({
     color = "black"
 }: SizedTextProps) {
     return (<>
-        <div>
-            <div>{topText}</div>
+        <div style={{ color }}>
+            <div style={{ fontSize: topTextSize }}>{topText}</div>
             <div>
-                <span>{mainText}</span>
-                <span>{subText}</span>
+                <span style={{ fontSize: mainTextSize }}>{mainText}</span>
+                <span style={{ fontSize: subTextSize }}>{subText}</span>
             </div>
         </div>
     </>)
