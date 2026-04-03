@@ -2,10 +2,12 @@ import React from "react"
 import fuji from "../assets/img/fuji.jpg"
 import ImageContainer from "../common/ImageContainer"
 import TechCarousel from "../component/TechCarousel"
+import NavPane from "../component/NavPane"
 
 const Home: React.FC = () => {
     return (
         <div className="pt-10">
+            <NavPane />
             {fadeInCSS}
             <h1 className="fadeIn-img">Noah Jung</h1><br />
             <h2 className="fadeIn-img">Fullstack Web Developer</h2><br />
