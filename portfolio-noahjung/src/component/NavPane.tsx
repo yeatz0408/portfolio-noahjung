@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import { useUIStore } from "../store/useStore";
 
 interface SiteMapInfo {
@@ -10,14 +10,13 @@ interface SiteMapInfo {
 const NavPane: React.FC = () => {
     const navigate = useNavigate()
 
-    const pageId = useUIStore((state) => state.pageId)
+    const pageId = useLocation().pathname.replace("/", "")
     const isNavPaneOpen = useUIStore((state) => state.isNavPaneOpen)
-    const setPageId = useUIStore((state) => state.setPageId)
     const toggleIsNavPaneOpen = useUIStore((state) => state.toggleIsNavPaneOpen)
 
     const siteMapInfos: SiteMapInfo[] = [
         {
-            uri: "/",
+            uri: "",
             label: "Home"
         },
         {
@@ -30,14 +29,17 @@ const NavPane: React.FC = () => {
         },
         {
             uri: "about",
-            label: "About this website"
+            label: "About this site"
         },
     ]
 
     const handleRouting = (info: SiteMapInfo) => {
-        setPageId(info.uri)
         navigate(`/${info.uri}`)
     }
+
+    useEffect(() => {
+        console.log(pageId)
+    }, [pageId])
 
     return (<>
         <aside className={classes.sidebar}

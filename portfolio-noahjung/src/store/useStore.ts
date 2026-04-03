@@ -1,17 +1,20 @@
 import { create } from 'zustand'
+import { persist } from "zustand/middleware"
 
 type UIState = {
-    pageId: string;
-    isNavPaneOpen: boolean;
-    setPageId: (id: string) => void;
-    toggleIsNavPaneOpen: () => void;
+    isNavPaneOpen: boolean
+    toggleIsNavPaneOpen: () => void
 }
 
-export const useUIStore = create<UIState>((set) => ({
-    pageId: '/',
-    isNavPaneOpen: false,
-
-    setPageId: (id) => set({ pageId: id }),
-    toggleIsNavPaneOpen: () =>
-        set((state) => ({ isNavPaneOpen: !state.isNavPaneOpen })),
-}))
+export const useUIStore = create<UIState>()(
+    persist<UIState>(
+        (set) => ({
+            isNavPaneOpen: false,
+            toggleIsNavPaneOpen: () =>
+                set((state) => ({ isNavPaneOpen: !state.isNavPaneOpen })),
+        }),
+        {
+            name: "ui-store",
+        }
+    )
+)
