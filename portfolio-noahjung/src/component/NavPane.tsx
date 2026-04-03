@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom"
+import { useUIStore } from "../store/useStore";
 
 interface SiteMapInfo {
     uri: string;
@@ -9,7 +10,11 @@ interface SiteMapInfo {
 const NavPane: React.FC = () => {
     const navigate = useNavigate()
 
-    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const pageId = useUIStore((state) => state.pageId)
+    const isNavPaneOpen = useUIStore((state) => state.isNavPaneOpen)
+    const setPageId = useUIStore((state) => state.setPageId)
+    const toggleIsNavPaneOpen = useUIStore((state) => state.toggleIsNavPaneOpen)
+
     const siteMapInfos: SiteMapInfo[] = [
         {
             uri: "/",
@@ -35,10 +40,10 @@ const NavPane: React.FC = () => {
 
     return (<>
         <aside className={classes.sidebar}
-            style={{ left: isOpen ? '0' : '-16rem ' }}
+            style={{ left: isNavPaneOpen ? '0' : '-16rem ' }}
         >
-            <button onClick={() => setIsOpen(!isOpen)} className={classes.toggleBtn}>
-                {isOpen ? 'close' : 'open'}
+            <button onClick={() => toggleIsNavPaneOpen()} className={classes.toggleBtn}>
+                {isNavPaneOpen ? 'close' : 'open'}
             </button>
             <div className={classes.stack}>
                 {
