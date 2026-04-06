@@ -64,7 +64,7 @@ const classes = {
     stack: "flex flex-col gap-2",
     btn: "w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 transition-all hover:bg-sky-200/50 hover:text-sky-800 hover:translate-x-1 cursor-pointer",
     toggleBtn: `absolute left-full top-[10%] h-[10vh] px-2 bg-sky-50 border-y border-r border-sky-200 rounded-r-md text-xs font-medium text-sky-500 hover:text-sky-800 transition-colors cursor-pointer [writing-mode:vertical-rl]`,
-    activeBtn: "w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold bg-sky-500 text-white shadow-md shadow-sky-200 ring-1 ring-sky-600/10 cursor-default",
+    activeBtn: "w-full text-left px-4 py-3 rounded-lg text-sm font-semibold text-sky-900 bg-sky-100/80 border-l-3 border-sky-500 transition-all cursor-default hover:bg-sky-100/80",
 }
 
 export default NavPane

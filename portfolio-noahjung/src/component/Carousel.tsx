@@ -13,6 +13,7 @@ export type SizedTextProps = {
     mainTextSize?: number;
     subText: string;
     subTextSize?: number;
+    verticalGap?: number;
     color?: string;
 }
 
@@ -37,7 +38,7 @@ const TechCarousel = ({
     }, [sizedTextProps])
 
     return (
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden mx-[50px]">
             <style>{`
                 @keyframes techScroll {
                     from { transform: translateX(0); }
@@ -65,8 +66,14 @@ const TechCarousel = ({
                     </div>
                 ))}
                 {textItems && textItems.map((item, idx) => (
-                    <div key={`${idx}-${item.topText}-${item.mainText}-${item.subText}`}>
-                        <SizedTexts topText={item.topText} mainText={item.mainText} subText={item.subText} color={item.color} />
+                    <div key={`${idx}-${item.topText}-${item.mainText}-${item.subText}`}
+                        className="mt-7.5 ml-12.5">
+                        <SizedTexts
+                            topText={item.topText} topTextSize={item.topTextSize}
+                            mainText={item.mainText} mainTextSize={item.mainTextSize}
+                            subText={item.subText} subTextSize={item.subTextSize}
+                            verticalGap={item.verticalGap}
+                            color={item.color} />
                     </div>
                 ))}
             </div>
@@ -96,17 +103,45 @@ function SizedTexts({
     mainTextSize = 20,
     subText,
     subTextSize = 10,
+    verticalGap = 5,
     color = "black"
 }: SizedTextProps) {
-    return (<>
-        <div style={{ color }}>
-            <div style={{ fontSize: topTextSize }}>{topText}</div>
-            <div>
-                <span style={{ fontSize: mainTextSize }}>{mainText}</span>
-                <span style={{ fontSize: subTextSize }}>{subText}</span>
+    return (
+        <div style={{ color, display: 'flex', flexDirection: 'column' }}>
+            <div style={{
+                fontSize: `${topTextSize}px`,
+                lineHeight: 1,
+                marginBottom: `${verticalGap}px`,
+                fontWeight: 'bold',
+                letterSpacing: '0.1em',
+            }}>
+                {topText}
+            </div>
+
+            <div style={{
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '4px',
+                transform: 'scaleY(1.2)',
+                transformOrigin: 'bottom left'
+            }}>
+                <span style={{
+                    fontSize: `${mainTextSize}px`,
+                    fontWeight: '800',
+                    lineHeight: 0.9
+                }}>
+                    {mainText}
+                </span>
+                <span style={{
+                    fontSize: `${subTextSize}px`,
+                    opacity: 0.8,
+                    fontWeight: 'bold'
+                }}>
+                    {subText}
+                </span>
             </div>
         </div>
-    </>)
+    )
 }
 
 export default TechCarousel
