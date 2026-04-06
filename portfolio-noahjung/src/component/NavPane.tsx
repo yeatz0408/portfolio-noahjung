@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate, useLocation } from "react-router-dom"
 import { useUIStore } from "../store/useStore";
 
@@ -36,10 +36,6 @@ const NavPane: React.FC = () => {
     const handleRouting = (info: SiteMapInfo) => {
         navigate(`/${info.uri}`)
     }
-
-    useEffect(() => {
-        console.log(pageId)
-    }, [pageId])
 
     return (<>
         <aside className={classes.sidebar}

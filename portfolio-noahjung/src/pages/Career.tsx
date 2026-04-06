@@ -1,8 +1,23 @@
+import { useMemo } from "react"
 import NavPane from "../component/NavPane"
 import Carousel from "../component/Carousel"
 import type { SizedTextProps } from "../component/Carousel"
+import { DEV_START_DATE } from "../assets/constant/PersonalInfo"
 
 const Career = () => {
+    const today = new Date()
+    const devStartDate = new Date(DEV_START_DATE)
+    const numOfMonths = (today.getFullYear() - devStartDate.getFullYear()) * 12 + (today.getMonth() - devStartDate.getMonth())
+    const devExpYear = useMemo<string>(() => {
+        if (numOfMonths < 36) return String(3)
+        const years = Math.trunc(numOfMonths / 12)
+        if (numOfMonths % 12 >= 5 && numOfMonths % 12 <= 9) {
+            return String(years) + ".5"
+        } else if (numOfMonths % 12 >= 10) {
+            return String(years + 1)
+        }
+        return String(years)
+    }, [numOfMonths])
 
     const careerSummaryTexts: SizedTextProps[] = [
         {
@@ -28,7 +43,7 @@ const Career = () => {
         {
             topText: "DEVELOPMENT",
             topTextSize: 14,
-            mainText: "3",
+            mainText: devExpYear,
             mainTextSize: 85,
             subText: "YEARS",
             subTextSize: 20,
