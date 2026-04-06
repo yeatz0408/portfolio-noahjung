@@ -1,63 +1,79 @@
-import React from "react"
-import { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
-interface PokemonProps {
-    id: number
+export type PokemonProp = {
+    pokemonId: number
 }
 
-interface PokemonData {
+interface PokemonInfo {
     id: number
     name: string
     types: string[]
-    moves?: string[]
+    moves: string[]
 }
 
-const Pokemon: React.FC<PokemonProps> = ({ id }) => {
+const Pokemon: React.FC<PokemonProp> = ({ pokemonId }) => {
 
-    const [pokemonData, setPokemonData] = useState<PokemonData | undefined>(undefined)
-
-    useEffect(() => {
-        getPokemonData(id).then(setPokemonData)
-    }, [id])
+    const [pokemonInfo, setPokemonInfo] = useState<PokemonInfo | undefined>(undefined)
 
     useEffect(() => {
-        console.log(pokemonData)
-    }, [pokemonData])
+        if (!pokemonId) return
+        getPokemon(pokemonId).then(setPokemonInfo)
+    }, [pokemonId])
+
+    useEffect(() => {
+        console.log(pokemonInfo)
+    }, [pokemonInfo])
+
     return (
         <div>
-            {pokemonData && (<div>
-                <h1>{pokemonData.name}</h1>
-                <div className="mb-5">
-                    <label><b>Type</b></label>
-                    {pokemonData.types && pokemonData.types.map(
-                        type => (
-                            <p>{type}</p>
-                        )
-                    )}
-                </div>
-                <div>
-                    <label><b>Moves</b></label>
-                    {
-                        pokemonData.moves && pokemonData.moves.map(move => (
-                            <span>{move} </span> //Fixme: I want to put , in between except for the end. 
-                        ))
-                    }
-                </div>
-            </div>)}
+            <h1>PokemonInfo</h1>
+            <div className="pb-5">
+                <label><b>Name</b></label><br />
+                <label>{pokemonInfo?.name}</label>
+            </div>
+
+            <div className="pb-5">
+                <label><b>Type{pokemonInfo && pokemonInfo.types.length > 1 && <span>s</span>}</b></label>
+                {pokemonInfo?.types.map((type, idx) => (<div key={`${idx}-${type}`}>{type}</div>))}
+            </div>
+
+            <div className="pb-5">
+                <label><b>Moves</b></label>
+                {pokemonInfo?.moves.map((m, i) => (
+                    <div key={`${i}-${m}`}>
+                        {m}
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
 
-async function getPokemonData(id: number): Promise<PokemonData> {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-    const data = await response.json()
+async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+        const pokemonData = await response.json()
 
-    return {
-        id: data.id,
-        name: data.name,
-        types: data.types.map((t: any) => t.type.name),
-        moves: data.moves?.map((m: any) => m.move.name) ?? []
+        console.log(pokemonData)
+
+        const moves = pokemonData.moves.
+            filter((move: { version_group_details: { version_group: { name: string } }[] }) => move.version_group_details
+                .some((vgd: { version_group: { name: string } }) => vgd.version_group.name.includes(LETS_GO)))
+            .map((filteredMove: { move: { name: string } }) => filteredMove.move.name)
+        console.log(moves)
+
+        return {
+            id: pokemonId,
+            name: pokemonData.name,
+            types: pokemonData.types.map((typeInfo: { type: { name: string } }) => typeInfo.type.name),
+            moves: moves
+        }
+    } catch (error) {
+        console.log(error)
+        return { id: -1, name: "error", types: [], moves: [] }
     }
 }
+
+const LETS_GO = "lets-go-"
 
 export default Pokemon

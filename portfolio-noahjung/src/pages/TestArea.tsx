@@ -6,15 +6,11 @@ import Pokemon from "../practice/Pokemon"
 
 const TestArea: React.FC = () => {
 
-    useEffect(() => {
-
-    }, [])
-
     return (<>
         <div>
             <NavPane />
             <Quiz />
-            <Pokemon id={1} />
+            <Pokemon pokemonId={1} />
         </div>
     </>)
 }
