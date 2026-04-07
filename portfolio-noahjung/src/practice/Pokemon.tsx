@@ -51,16 +51,17 @@ const Pokemon: React.FC<PokemonProp> = ({ pokemonId }) => {
 
 async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
     try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+        const evolutionResponse = await fetch(POKEMON_EVOLUTION_API_URL + 1).then(response => response.json())
+        console.log(evolutionResponse)
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/ivysaur`)
         const pokemonData = await response.json()
-
         console.log(pokemonData)
 
         const moves = pokemonData.moves.
             filter((move: { version_group_details: { version_group: { name: string } }[] }) => move.version_group_details
                 .some((vgd: { version_group: { name: string } }) => vgd.version_group.name.includes(LETS_GO)))
             .map((filteredMove: { move: { name: string } }) => filteredMove.move.name)
-        console.log(moves)
+
 
         return {
             id: pokemonId,
@@ -75,5 +76,10 @@ async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
 }
 
 const LETS_GO = "lets-go-"
+
+const POKEMON_ENCOUNTER_API_URL = "https://pokeapi.co/api/v2/encounter-method/"
+
+//https://pokeapi.co/api/v2/evolution-chain/{id}/
+const POKEMON_EVOLUTION_API_URL = "https://pokeapi.co/api/v2/evolution-chain/"
 
 export default Pokemon
