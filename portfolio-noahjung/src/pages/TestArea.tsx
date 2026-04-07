@@ -6,6 +6,7 @@ import Pokemon from "../practice/Pokemon"
 
 const TestArea: React.FC = () => {
 
+    // test commit
     return (<>
         <div>
             <NavPane />
