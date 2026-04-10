@@ -4,6 +4,7 @@ import ImageContainer from "../common/ImageContainer"
 import TechCarousel from "../component/Carousel"
 import type { SizedImageProps } from "../component/Carousel"
 import NavPane from "../component/NavPane"
+import MessageWindow from "../component/MessageWindow";
 
 import java from "../assets/img/tech/java.jpeg"
 import springboot from "../assets/img/tech/spring_boot.png"
@@ -45,7 +46,7 @@ const Home: React.FC = () => {
             <div className="fadeIn-img2 mx-20 mt-7.5">
                 <TechCarousel sizedImagesProps={techImages} />
             </div>
-
+            <MessageWindow />
         </div>
     )
 }
