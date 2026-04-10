@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react"
 import NavPane from "../component/NavPane"
 import Quiz from "../practice/Quiz"
 import Pokemon from "../practice/Pokemon"
+import MessageWindow from "../component/MessageWindow"
 
 const TestArea: React.FC = () => {
 
@@ -37,6 +38,7 @@ const TestArea: React.FC = () => {
             <NavPane />
             <Quiz />
             {/* <Pokemon pokemonId={3} /> */}
+            <MessageWindow />
         </div>
     </>)
 }

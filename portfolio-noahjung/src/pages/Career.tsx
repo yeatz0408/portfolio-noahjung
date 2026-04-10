@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import NavPane from "../component/NavPane"
 import Carousel from "../component/Carousel"
+import MessageWindow from "../component/MessageWindow"
 import type { SizedTextProps } from "../component/Carousel"
 import { DEV_START_DATE } from "../assets/constant/PersonalInfo"
 
@@ -99,6 +100,9 @@ const Career = () => {
 
     return (<>
         <NavPane />
+        <div className="w-full flex justify-center pt-10">
+            <MessageWindow />
+        </div>
         <div className="pt-10">
             <Carousel sizedTextProps={careerSummaryTexts} />
         </div>

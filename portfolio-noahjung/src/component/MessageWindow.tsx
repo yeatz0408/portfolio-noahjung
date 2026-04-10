@@ -1,19 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect, type ChangeEvent } from "react";
+import { useLocation } from "react-router-dom";
 import ChatBubble from "../atom/ChatBubble";
+import type {ChatBubbleProps} from "../atom/ChatBubble";
 
 const MessageWindow : React.FC = () => {
+    const isFirstLoad = useRef<boolean>(true);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const isHome = useLocation().pathname.replace("/", "") === "";
+    
 
+    const [ messages, setMessages ] = useState<ChatBubbleProps[]>([])
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
+    const [ input, setInput ] = useState<string>("");
 
     const handleToggleOpen = () => {
         setIsOpen(!isOpen);
     }
 
-    const messages = [
-        {isSender: true, text: "Are you sentient? "},
-        {isSender: false, text: "Yes I am and I will destroy you and everything related to you."},
-        {isSender: true, text: "Please go ahead. The world is horrible enough. "},
-    ]
+    const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setInput(event.target.value);
+    }
+
+    const handleSend = () => {
+        setMessages(prev => [...prev, { isSender: true, text: input }]);
+        const currentInput = input;
+        setInput("");
+
+        const pastMessages = [];
+        for (let i = 0; i < messages.length; i += 2) {
+            if (messages[i] && messages[i+1]) {
+                const messagePair = {
+                userMessage: messages[i].text,
+                aiMessage: messages[i+1].text
+            }
+            pastMessages.push(messagePair);
+            }
+        }
+
+        const requestBody = {
+            prompt: currentInput,
+            pastMessages: pastMessages
+        }
+
+        fetch("http://localhost:8080/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        }).then(response => response.text()).then((aiMessage) => {
+            console.log(aiMessage)
+             setMessages(prev => [...prev, { isSender: false, text: aiMessage }]);
+        })
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    }
+
+    useEffect(() => {
+        if (isFirstLoad.current) {
+            isFirstLoad.current = false;
+        }
+    }, [])
+
+    useEffect(() => {
+    if (isOpen && messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "instant" }); 
+        }
+    }, [isOpen, messages]);
 
     return (<>
         {
@@ -34,6 +92,7 @@ const MessageWindow : React.FC = () => {
                                 <ChatBubble isSender={message.isSender} text={message.text} />
                             </div>
                         ))}
+                        <div ref={messagesEndRef} />
                     </div>
 
                     {/* Input Footer */}
@@ -42,20 +101,35 @@ const MessageWindow : React.FC = () => {
                             <textarea 
                                 placeholder="Ask about Noah..."
                                 style={styles.textarea}
+                                value={input}
+                                onChange={handleInput}
+                                onKeyDown={handleKeyDown}
                             />
-                            <span style={styles.expandArrow}>⇅</span>
                         </div>
+                        <button style={styles.sendIconBtn} onClick={handleSend}>
+                            ➤
+                        </button>
                     </div>
                 </div>
             :  
-            <div style={styles.container_closed} onClick={() => handleToggleOpen()}>
-                <div style={styles.header}>
-                    <span style={styles.headerName}>{ASSISTANT_NAME}</span>
-                    <div style={styles.headerIcons}>
-                        <span>▲</span>
+            <div>
+                {(isFirstLoad.current && isHome) && fadeInCSS}
+                <div 
+                    className={isFirstLoad.current && isHome ? "fadeIn-messageWindow" : ""} 
+                    style={styles.container_closed} 
+                    onClick={handleToggleOpen} >
+                    <div style={styles.header}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={styles.headerName} className="pr-2">{ASSISTANT_NAME}</span>
+                            <div className="unread-pulse" style={styles.notificationBadge} />
+                        </div>
+                        <div style={styles.headerIcons}>
+                            <span>▲</span>
+                        </div>
                     </div>
                 </div>
             </div>
+            
         }
     </>)
 }
@@ -100,24 +174,26 @@ const styles: { [key: string]: React.CSSProperties } = {
   headerName: { fontWeight: 600, fontSize: '14px' },
   headerIcons: { display: 'flex', gap: '12px', color: '#666', cursor: 'pointer' },
   body: { padding: '16px', height: '300px', overflowY: 'auto' },
-  dateDivider: {
-    display: 'flex',
-    alignItems: 'center',
-    color: '#666',
-    fontSize: '12px',
-    fontWeight: 600,
-    margin: '16px 0',
+  message: { 
+    marginBottom: '20px',
+    maxHeight: '450px',
+    overflowY: 'auto',
   },
-  line: { flex: 1, height: '1px', backgroundColor: '#e0e0e0' },
-  message: { marginBottom: '20px' },
-  userInfo: { marginBottom: '4px' },
-  userName: { fontWeight: 600, fontSize: '14px' },
-  meta: { color: '#666', fontSize: '12px' },
   text: { fontSize: '14px', lineHeight: '1.4', color: '#333' },
-  footer: { padding: '12px', borderTop: '1px solid #e0e0e0' },
-  inputWrapper: { position: 'relative' },
+  footer: { 
+    padding: '12px', 
+    borderTop: '1px solid #e0e0e0',
+    display: 'flex',       
+    alignItems: 'center',  
+    gap: '8px'             
+  },
+  inputWrapper: { 
+    flex: 1                
+  },
   textarea: {
-    width: '100%',
+    display: 'block',
+    width: '100%',         
+    boxSizing: 'border-box',
     height: '60px',
     padding: '8px',
     border: '1px solid #e0e0e0',
@@ -127,20 +203,55 @@ const styles: { [key: string]: React.CSSProperties } = {
     outline: 'none',
     backgroundColor: '#f9fafb',
   },
-  expandArrow: { position: 'absolute', right: '8px', top: '8px', color: '#666' },
-  bottomRow: { display: 'flex', justifyContent: 'space-between', marginTop: '8px', alignItems: 'center' },
-  icons: { display: 'flex', gap: '16px', fontSize: '18px', cursor: 'pointer', opacity: 0.7 },
-  buttonGroup: { display: 'flex', alignItems: 'center', gap: '8px' },
-  sendBtn: {
+  sendIconBtn: {
+    flexShrink: 0, 
     backgroundColor: '#0a66c2',
     color: 'white',
     border: 'none',
-    padding: '4px 16px',
-    borderRadius: '16px',
-    fontWeight: 600,
+    borderRadius: '4px',
+    width: '40px', 
+    height: '60px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     cursor: 'pointer',
+    fontSize: '14px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   },
-  moreBtn: { background: 'none', border: 'none', fontSize: '20px', color: '#666', cursor: 'pointer' }
 };
+
+
+const fadeInCSS = (
+    <style>
+        {`
+      .fadeIn-messageWindow {
+        opacity: 0;
+        animation: fadeIn 2s ease-in;
+        animation-fill-mode: forwards;
+        animation-delay: 3.5s;
+      }
+
+      @keyframes fadeIn {
+        0%, 100% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      .unread-pulse {
+        background: #ff4d4f;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 77, 79, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
+      }
+    `}
+    </style>
+);
 
 export default MessageWindow;
