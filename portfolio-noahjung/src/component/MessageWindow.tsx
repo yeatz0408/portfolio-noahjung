@@ -1,21 +1,30 @@
-import React, { useState, useRef, useEffect, type ChangeEvent } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  type ChangeEvent,
+  useMemo,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import ChatBubble from '../atom/ChatBubble';
 import type { ChatBubbleProps } from '../atom/ChatBubble';
 
 const MessageWindow: React.FC = () => {
-  const isFirstLoad = useRef<boolean>(true);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const isHome = useLocation().pathname.replace('/', '') === '';
 
-  const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [input, setInput] = useState<string>('');
+  const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
 
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
 
+  const isFirstLoad = useRef<boolean>(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const isOpenRef = useRef<boolean>(isOpen);
+
   const handleToggleOpen = () => {
+    setHasUnreadMessage(false);
     setIsOpen(!isOpen);
   };
 
@@ -77,7 +86,19 @@ const MessageWindow: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    isOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && !lastMessage.isSender && !isOpenRef.current) {
+      setHasUnreadMessage(true);
+    }
+  }, [messages]);
+
+  useEffect(() => {
     if (isOpen && messagesEndRef.current) {
+      setHasUnreadMessage(false);
       messagesEndRef.current.scrollIntoView({ behavior: 'instant' });
     }
   }, [isOpen, messages]);
@@ -135,6 +156,7 @@ const MessageWindow: React.FC = () => {
       ) : (
         <div>
           {isFirstLoad.current && isHome && fadeInCSS}
+          {pulseCss}
           <div
             className={
               isFirstLoad.current && isHome ? 'fadeIn-messageWindow' : ''
@@ -289,8 +311,13 @@ const fadeInCSS = (
         0%, 100% { opacity: 0; }
         100% { opacity: 1; }
       }
+    `}
+  </style>
+);
 
-      .unread-pulse {
+const pulseCss = (
+  <style>{`
+        .unread-pulse {
         background: #ff4d4f;
         border-radius: 50%;
         width: 10px;
@@ -304,8 +331,7 @@ const fadeInCSS = (
         70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 77, 79, 0); }
         100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 77, 79, 0); }
       }
-    `}
-  </style>
+        `}</style>
 );
 
 export default MessageWindow;
