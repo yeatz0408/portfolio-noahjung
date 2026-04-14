@@ -21,7 +21,6 @@ const MessageWindow: React.FC = () => {
 
   const isFirstLoad = useRef<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const isOpenRef = useRef<boolean>(isOpen);
 
   const handleToggleOpen = () => {
     setHasUnreadMessage(false);
@@ -86,12 +85,8 @@ const MessageWindow: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    isOpenRef.current = isOpen;
-  }, [isOpen]);
-
-  useEffect(() => {
     const lastMessage = messages[messages.length - 1];
-    if (lastMessage && !lastMessage.isSender && !isOpenRef.current) {
+    if (lastMessage && !lastMessage.isSender && !isOpen) {
       setHasUnreadMessage(true);
     }
   }, [messages]);
