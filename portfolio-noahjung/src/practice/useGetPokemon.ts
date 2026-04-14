@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export interface GetPokemonResult {
   isFetching: boolean;
@@ -9,7 +9,6 @@ export interface GetPokemonResult {
 export interface PokemonInfo {
   id: number;
   name: string;
-  entry: string;
   types: string[];
   moves?: string[];
   evolutionChain?: string[];
@@ -25,12 +24,12 @@ const useGetPokemon = (pokemonId: number): GetPokemonResult => {
     let isMounted = true;
 
     setIsFetching(true);
+    setData(undefined);
     setError(undefined);
 
     const fetchGetPokemon = async () => {
       try {
         const pokemonInfo = await getPokemon(pokemonId);
-        // Let's say there is some logic if getPokemon() was successful.
         if (isMounted) {
             setData(pokemonInfo);
         }
@@ -52,26 +51,38 @@ const useGetPokemon = (pokemonId: number): GetPokemonResult => {
     }
   }, [pokemonId]);
 
-  return { isFetching, data, error };
+  return useMemo(() => {
+    return { isFetching, data, error }
+  },[isFetching, data, error]);
 };
 
 async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
-  const [pokemonRes, entryRes, imgRes] = await Promise.all([
+  const [pokemonRes, imgRes] = await Promise.all([
     fetch(POKEMON_API_URL + pokemonId),
-    fetch(POKEMON_ENTRY_KANTO_API_URL),
     fetch(POKEMON_IMG_API_URL + pokemonId),
   ]);
 
-  const [pokemonData, entryData, imgData] = await Promise.all([
+  if (!pokemonRes.ok || !imgRes.ok) {
+    throw new Error("API failed. ");
+  }
+
+  const [pokemonData, imgData] = await Promise.all([
     pokemonRes.json(),
-    entryRes.json(),
-    imgRes.json(),
-  ]);
+    imgRes.json()
+  ])
 
   const speciesRes = await fetch(POKEMON_SPECIES_API_URL + pokemonData.id);
+  if (!speciesRes.ok) {
+    throw new Error("API failed. ");
+  }
+
   const speciesData = await speciesRes.json();
 
   const evolutionRes = await fetch(speciesData.evolution_chain?.url);
+  if (!evolutionRes.ok) {
+    throw new Error("API failed. ");
+  }
+
   const evolutionData = await evolutionRes.json();
 
   const moves = pokemonData.moves
@@ -94,7 +105,6 @@ async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
   const toReturn: PokemonInfo = {
     id: pokemonData.id,
     name: pokemonData.name,
-    entry: entryData.pokemon_entries[pokemonId - 1],
     types: pokemonData.types.map(
       (type: { type: { name: string } }) => type.type.name
     ),

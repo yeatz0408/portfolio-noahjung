@@ -6,35 +6,35 @@ import Pokemon from '../practice/Pokemon';
 import MessageWindow from '../component/MessageWindow';
 
 const TestArea: React.FC = () => {
-  const hasFetched = useRef(false);
+  const explorers = [
+    { name: 'Yuri', age: 27, oxygen: 85, active: true },
+    { name: 'Valentina', age: 26, oxygen: 100, active: true },
+    { name: 'Buzz', age: 39, oxygen: 40, active: false },
+    { name: 'Sally', age: 32, oxygen: 95, active: true },
+  ];
 
-  useEffect(() => {
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+  const names = explorers
+    .sort((a, b) => a.age - b.age)
+    .filter((e) => e.active)
+    .map((e) => e.name);
+  console.log(names);
 
-    const requestBody = {
-      prompt:
-        'Tell me what I asked earlier. With the exact same words. Do not add anything more. Just the two sentences that I wrote, not your answer.',
-      pastMessages: [
-        {
-          userMessage: 'What does Noah do?',
-          aiMessage: 'He is a fullstack web developer.',
-        },
-        {
-          userMessage: "What's his main language?",
-          aiMessage: 'His main language is Java.',
-        },
-      ],
-    };
+  const filteredExplorers = explorers
+    .sort((a, b) => a.age - b.age)
+    .filter((e) => e.active);
 
-    // fetch("http://localhost:8080/chat/dummy", {
-    //     method: "POST",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify(requestBody)
-    // }).then(response => response.text()).then(console.log)
-  }, []);
+  filteredExplorers.forEach((n) =>
+    console.log(`Explorer ${n.name} has ${n.oxygen}%`)
+  );
+
+  const remainingOxygen = explorers.reduce((acc, cur) => acc + cur.oxygen, 0);
+  console.log(remainingOxygen);
+
+  const optimist = explorers.some((e) => e.oxygen < 50);
+  console.log('optimist: ', optimist);
+
+  const perfectionist = filteredExplorers.every((fe) => fe.oxygen > 50);
+  console.log('perfectionist: ', perfectionist);
 
   return (
     <>
@@ -42,7 +42,7 @@ const TestArea: React.FC = () => {
         <NavPane />
         <Quiz />
         <Pokemon pokemonId={3} />
-        <MessageWindow />
+        {/* <MessageWindow /> */}
       </div>
     </>
   );
