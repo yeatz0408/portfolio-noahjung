@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 
-export interface GetPokemonResult {
+export interface PokemonResult {
   isFetching: boolean;
   data: PokemonInfo | undefined;
-  error: Error | undefined;
+  error?: Error | undefined;
 }
 
 export interface PokemonInfo {
@@ -15,46 +15,44 @@ export interface PokemonInfo {
   imgSrc?: string;
 }
 
-const useGetPokemon = (pokemonId: number): GetPokemonResult => {
+const useGetPokemon = (pokemonId: number): PokemonResult => {
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const [data, setData] = useState<PokemonInfo | undefined>(undefined);
   const [error, setError] = useState<Error | undefined>(undefined);
 
   useEffect(() => {
+
     let isMounted = true;
 
     setIsFetching(true);
     setData(undefined);
     setError(undefined);
 
-    const fetchGetPokemon = async () => {
+    const fetchPokemon = async () => {
       try {
         const pokemonInfo = await getPokemon(pokemonId);
         if (isMounted) {
-            setData(pokemonInfo);
+          setData(pokemonInfo);
         }
-        
       } catch (error) {
         if (isMounted) {
-            setError(error as Error);
+          setError(error as Error);
         }
       } finally {
         if (isMounted) {
-            setIsFetching(false);
+          setIsFetching(false);
         }
       }
-    };
-    fetchGetPokemon();
-
-    return () => {
-        isMounted = false;
     }
+    fetchPokemon();
+
+    return () => { isMounted = false; } ;
   }, [pokemonId]);
 
   return useMemo(() => {
-    return { isFetching, data, error }
-  },[isFetching, data, error]);
-};
+    return {isFetching, data, error};
+  }, [isFetching, data, error])
+}
 
 async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
   const [pokemonRes, imgRes] = await Promise.all([

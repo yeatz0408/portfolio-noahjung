@@ -8,12 +8,14 @@ import React, {
 import { useLocation } from 'react-router-dom';
 import ChatBubble from '../atom/ChatBubble';
 import type { ChatBubbleProps } from '../atom/ChatBubble';
+import ErrorCard from '../atom/ErrorCard';
 
 const MessageWindow: React.FC = () => {
   const isHome = useLocation().pathname.replace('/', '') === '';
 
   const [input, setInput] = useState<string>('');
   const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,13 +33,14 @@ const MessageWindow: React.FC = () => {
     setInput(event.target.value);
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input) {
       return;
     }
 
     setMessages((prev) => [...prev, { isSender: true, text: input }]);
     const currentInput = input;
+    setErrorMessage('');
     setInput('');
     setIsLoading(true);
 
@@ -57,18 +60,25 @@ const MessageWindow: React.FC = () => {
       pastMessages: pastMessages,
     };
 
-    fetch('http://localhost:8080/chat', {
+    const response = await fetch('http://localhost:8080/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
-    })
-      .then((response) => response.text())
-      .then((aiMessage) => {
-        setMessages((prev) => [...prev, { isSender: false, text: aiMessage }]);
-        setIsLoading(false);
-      });
+    });
+
+    const extractedText = await response.text();
+
+    if (response.ok) {
+      setMessages((prev) => [
+        ...prev,
+        { isSender: false, text: extractedText },
+      ]);
+    } else {
+      setErrorMessage(extractedText);
+    }
+    setIsLoading(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -98,10 +108,28 @@ const MessageWindow: React.FC = () => {
     }
   }, [isOpen, messages]);
 
+  useEffect(() => {
+    if (!errorMessage) {
+      return;
+    }
+
+    if (!isOpen) {
+      setHasUnreadMessage(true);
+    }
+
+    const timerId = setTimeout(() => {
+      setMessages((prev) => prev.slice(0, -1));
+      setErrorMessage('');
+    }, 10000);
+
+    return () => clearTimeout(timerId);
+  }, [errorMessage]);
+
   return (
     <>
       {isOpen ? (
         <div style={styles.container_open}>
+          {errorMessage && <ErrorCard message={errorMessage} />}
           {/* Header */}
           <div style={styles.header}>
             <span style={styles.headerName}>{ASSISTANT_NAME}</span>
