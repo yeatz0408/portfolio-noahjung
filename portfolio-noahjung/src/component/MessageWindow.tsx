@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import ChatBubble from '../atom/ChatBubble';
 import type { ChatBubbleProps } from '../atom/ChatBubble';
 import ErrorCard from '../atom/ErrorCard';
+import ProgressBar from '../atom/ProgressBar';
 
 const MessageWindow: React.FC = () => {
   const isHome = useLocation().pathname.replace('/', '') === '';
@@ -153,27 +154,40 @@ const MessageWindow: React.FC = () => {
 
           {/* Input Footer */}
           <div style={styles.footer}>
-            <div style={styles.inputWrapper}>
-              <textarea
-                placeholder={
-                  isLoading ? 'Waiting for response...' : 'Ask about Noah...'
-                }
-                style={styles.textarea}
-                value={input}
-                onChange={handleInput}
-                onKeyDown={handleKeyDown}
-                disabled={isLoading}
-              />
-            </div>
-            <button
-              style={
-                isLoading ? styles.sendIconBtnDisabled : styles.sendIconBtn
-              }
-              onClick={handleSend}
-              disabled={isLoading}
+            {/* Top Row: Textarea and Button */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+                alignItems: 'flex-end',
+                width: '100%',
+              }}
             >
-              ➤
-            </button>
+              <div style={styles.inputWrapper}>
+                <textarea
+                  placeholder={
+                    isLoading ? 'Waiting for response...' : 'Ask about Noah...'
+                  }
+                  style={styles.textarea}
+                  value={input}
+                  onChange={handleInput}
+                  onKeyDown={handleKeyDown}
+                  disabled={isLoading}
+                  maxLength={300}
+                />
+              </div>
+              <button
+                style={
+                  isLoading ? styles.sendIconBtnDisabled : styles.sendIconBtn
+                }
+                onClick={handleSend}
+                disabled={isLoading}
+              >
+                ➤
+              </button>
+            </div>
+
+            <ProgressBar max={300} min={0} value={input.length} />
           </div>
         </div>
       ) : (
@@ -269,7 +283,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: '12px',
     borderTop: '1px solid #e0e0e0',
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     gap: '8px',
   },
   inputWrapper: {
