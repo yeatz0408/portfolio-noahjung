@@ -1,15 +1,10 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  type ChangeEvent,
-  useMemo,
-} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ChatBubble from '../atom/ChatBubble';
 import type { ChatBubbleProps } from '../atom/ChatBubble';
 import ErrorCard from '../atom/ErrorCard';
 import ProgressBar from '../atom/ProgressBar';
+import { useLimitStore } from '../store/useStore';
 
 const MessageWindow: React.FC = () => {
   const isHome = useLocation().pathname.replace('/', '') === '';
@@ -39,47 +34,58 @@ const MessageWindow: React.FC = () => {
       return;
     }
 
-    setMessages((prev) => [...prev, { isSender: true, text: input }]);
-    const currentInput = input;
-    setErrorMessage('');
-    setInput('');
-    setIsLoading(true);
+    try {
+      checkChatLimit();
 
-    const pastMessages = [];
-    for (let i = 0; i < messages.length; i += 2) {
-      if (messages[i] && messages[i + 1]) {
-        const messagePair = {
-          userMessage: messages[i].text,
-          aiMessage: messages[i + 1].text,
-        };
-        pastMessages.push(messagePair);
+      setMessages((prev) => [...prev, { isSender: true, text: input }]);
+      const currentInput = input;
+      setErrorMessage('');
+      setInput('');
+      setIsLoading(true);
+
+      const pastMessages = [];
+      for (let i = 0; i < messages.length; i += 2) {
+        if (messages[i] && messages[i + 1]) {
+          const messagePair = {
+            userMessage: messages[i].text,
+            aiMessage: messages[i + 1].text,
+          };
+          pastMessages.push(messagePair);
+        }
       }
+
+      const requestBody = {
+        prompt: currentInput,
+        pastMessages: pastMessages,
+      };
+
+      const response = await fetch('http://localhost:8080/chat/dummy/ok', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const extractedText = await response.text();
+
+      if (response.ok) {
+        setMessages((prev) => [
+          ...prev,
+          { isSender: false, text: extractedText },
+        ]);
+      } else {
+        throw new Error(extractedText);
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage('An unexpected error occurred');
+      }
+    } finally {
+      setIsLoading(false);
     }
-
-    const requestBody = {
-      prompt: currentInput,
-      pastMessages: pastMessages,
-    };
-
-    const response = await fetch('http://localhost:8080/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    const extractedText = await response.text();
-
-    if (response.ok) {
-      setMessages((prev) => [
-        ...prev,
-        { isSender: false, text: extractedText },
-      ]);
-    } else {
-      setErrorMessage(extractedText);
-    }
-    setIsLoading(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -117,12 +123,12 @@ const MessageWindow: React.FC = () => {
     if (!isOpen) {
       setHasUnreadMessage(true);
     }
-
     const timerId = setTimeout(() => {
-      setMessages((prev) => prev.slice(0, -1));
+      if (messages[messages.length - 1].isSender) {
+        setMessages((prev) => prev.slice(0, -1));
+      }
       setErrorMessage('');
     }, 10000);
-
     return () => clearTimeout(timerId);
   }, [errorMessage]);
 
@@ -225,6 +231,59 @@ const MessageWindow: React.FC = () => {
     </>
   );
 };
+
+function checkChatLimit() {
+  const HOURLY_LIMIT = 15;
+  const DAILY_LIMIT = 30;
+
+  const { aiChatLimits, setLimit } = useLimitStore.getState();
+  const { minute, hour, day } = aiChatLimits;
+  const now = new Date();
+
+  if (!minute || !hour || !day) {
+    const initData = { countFrom: now, count: 1 };
+    setLimit('minute', initData);
+    setLimit('hour', initData);
+    setLimit('day', initData);
+    return;
+  }
+
+  const isPastDay = now.getDay() !== new Date(day.countFrom).getDay();
+  if (day.count >= DAILY_LIMIT && !isPastDay) {
+    throw new Error(
+      'You have reached the daily message limit. Please try again tomorrow.'
+    );
+  }
+
+  const isPastHour = now.getHours() !== new Date(hour.countFrom).getHours();
+  if (hour.count >= HOURLY_LIMIT && !isPastHour) {
+    const howManyMinutes = 60 - now.getMinutes();
+    throw new Error(
+      `You have reached the hourly message limit. Please try again in ${howManyMinutes} minute${howManyMinutes !== 1 ? 's' : ''}.`
+    );
+  }
+
+  const isPast20Secs =
+    now.getTime() - new Date(minute.countFrom).getTime() > 20000;
+  if (!isPast20Secs) {
+    throw new Error('Too many messages. Please try in few seconds. ');
+  }
+
+  if (isPastDay) {
+    setLimit('day', { countFrom: now, count: 1 });
+  } else {
+    setLimit('day', { countFrom: day.countFrom, count: day.count + 1 });
+  }
+
+  if (isPastHour) {
+    setLimit('hour', { countFrom: now, count: 1 });
+  } else {
+    setLimit('hour', { countFrom: hour.countFrom, count: hour.count + 1 });
+  }
+
+  // Update Minute
+  setLimit('minute', { countFrom: now, count: 1 });
+}
 
 const ASSISTANT_NAME = "Noah's AI";
 
