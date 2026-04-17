@@ -10,7 +10,7 @@ const TestArea: React.FC = () => {
     <>
       <div>
         <NavPane />
-        <Pokemon pokemonId={3} />
+        <Pokemon />
       </div>
     </>
   );

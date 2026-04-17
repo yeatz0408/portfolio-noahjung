@@ -1,21 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import useGetPokemon from '../practice/useGetPokemon';
+import React, { useEffect, useState } from 'react';
 import useGetPokemonPage from '../practice/useGetPokemonPage';
 import type { PokemonInfo } from '../practice/useGetPokemonPage';
 
-export type PokemonProp = {
-  pokemonId: number;
-};
-
-const Pokemon: React.FC<PokemonProp> = ({ pokemonId }) => {
-  // const { isFetching, data } = useGetPokemon(pokemonId);
-
+const Pokemon: React.FC = () => {
+  const [pageNum, setPageNum] = useState<number>(1);
   const [isFront, setIsFront] = useState<boolean>(true);
+  const { isFetching, data } = useGetPokemonPage(pageNum);
 
-  const { data } = useGetPokemonPage(1);
+  if (isFetching) {
+    return <Loading />;
+  }
 
   return (
-    <div>
+    <div className="pb-20">
       <div className="p-10 flex justify-between">
         <h1>PokemonInfo</h1>
         <button
@@ -27,11 +24,36 @@ const Pokemon: React.FC<PokemonProp> = ({ pokemonId }) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
         {data &&
-          data.map((pi) => <PokemonFrame pokemonInfo={pi} isFront={isFront} />)}
+          data.map((pi) => (
+            <PokemonFrame
+              key={`${pi.id}-${pi.name}`}
+              pokemonInfo={pi}
+              isFront={isFront}
+            />
+          ))}
+      </div>
+      <div className="flex justify-center py-5">
+        <Paginator pageNum={pageNum} setPageNum={setPageNum} />
       </div>
     </div>
   );
 };
+
+const Loading = () => (
+  <div style={{ display: 'grid', placeItems: 'center', height: '100vh' }}>
+    <style>{`@keyframes s {to{transform:rotate(360deg)}}`}</style>
+    <div
+      style={{
+        width: '60px',
+        height: '60px',
+        border: '6px solid #eee',
+        borderTopColor: '#007bff',
+        borderRadius: '50%',
+        animation: 's .8s infinite linear',
+      }}
+    />
+  </div>
+);
 
 const PokemonFrame = ({
   pokemonInfo,
@@ -65,6 +87,78 @@ const PokemonFrame = ({
         ))}
       </div>
     </div>
+  );
+};
+
+interface PaginatorProps {
+  pageNum: number;
+  setPageNum: (num: number) => void;
+}
+
+const Paginator = ({ pageNum, setPageNum }: PaginatorProps) => {
+  const MIN = 1;
+  const MAX = 8;
+
+  const [pageNums, setPageNums] = useState<number[]>([]);
+  const [hasMoveToFirstButton, setHasMoveToFirstButton] =
+    useState<boolean>(false);
+  const [hasMoveToLastButton, setHasMoveToLastButton] =
+    useState<boolean>(false);
+
+  if (pageNum < MIN || pageNum > MAX) {
+    throw new Error(`Please choose page number between ${MIN} and ${MAX}`);
+  }
+
+  useEffect(() => {
+    setPageNums([]);
+    if (pageNum === MIN || pageNum === MIN + 1) {
+      setPageNums([MIN, MIN + 1, MIN + 2]);
+      setHasMoveToFirstButton(false);
+      setHasMoveToLastButton(true);
+    } else if (pageNum === MAX || pageNum === MAX - 1) {
+      setPageNums([MAX - 2, MAX - 1, MAX]);
+      setHasMoveToFirstButton(true);
+      setHasMoveToLastButton(false);
+    } else {
+      setPageNums([pageNum - 1, pageNum, pageNum + 1]);
+      setHasMoveToFirstButton(true);
+      setHasMoveToLastButton(true);
+    }
+  }, [pageNum]);
+
+  return (
+    <>
+      <div className="flex gap-4">
+        {hasMoveToFirstButton && (
+          <button
+            className="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 text-sm"
+            onClick={() => setPageNum(MIN)}
+          >
+            {'<<'}
+          </button>
+        )}
+        {pageNums.map((num) => (
+          <button
+            key={`pageNum-${num}`}
+            className={`px-3 py-1 border border-gray-300 ${
+              num === pageNum ? 'bg-blue-500 text-white' : 'bg-white'
+            } ${num !== pageNum && 'hover:bg-gray-100'} text-sm`}
+            onClick={() => setPageNum(num)}
+            disabled={num === pageNum}
+          >
+            {num}
+          </button>
+        ))}
+        {hasMoveToLastButton && (
+          <button
+            className="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 text-sm"
+            onClick={() => setPageNum(MAX)}
+          >
+            {'>>'}
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 

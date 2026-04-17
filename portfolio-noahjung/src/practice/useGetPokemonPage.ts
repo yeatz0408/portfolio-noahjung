@@ -30,6 +30,8 @@ const useGetPokemonPage = (pageNum: number) : PokemonPageResult => {
 
         const getPokemonPage = async () => {
             try {
+                console.log("★ Calling API ★");
+
                 const pageRes = await fetch(getUrlByPage(pageNum));
                 const pageData = await pageRes.json();
 
@@ -76,10 +78,18 @@ const useGetPokemonPage = (pageNum: number) : PokemonPageResult => {
 }
 
 function getUrlByPage(pageNum: number) {
-  return POKEMON_API_URL + pageNum * 20;
+    let offset = 0;
+    let limit = 20;
+    if (pageNum !== 1) {
+        offset = (pageNum - 1) * 20;
+    }
+    if (pageNum === 8) {
+        limit = 11;
+    }
+    const POKEMON_API_URL = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}&limit=${limit}`;
+    return POKEMON_API_URL;
 }
 
 const LETS_GO = 'lets-go-';
-const POKEMON_API_URL = 'https://pokeapi.co/api/v2/pokemon/?limit=20&offset=';
 
 export default useGetPokemonPage;
