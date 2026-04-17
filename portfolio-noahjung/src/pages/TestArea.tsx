@@ -1,9 +1,6 @@
 import React from 'react';
-import { useEffect, useRef } from 'react';
 import NavPane from '../component/NavPane';
-import Quiz from '../practice/Quiz';
-import Pokemon from '../practice/Pokemon';
-import MessageWindow from '../component/MessageWindow';
+import Pokemon from '../practice/pokemon/page/Pokemon';
 
 const TestArea: React.FC = () => {
   return (
