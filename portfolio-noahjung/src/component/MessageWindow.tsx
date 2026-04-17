@@ -59,7 +59,7 @@ const MessageWindow: React.FC = () => {
         pastMessages: pastMessages,
       };
 
-      const response = await fetch('http://localhost:8080/chat/dummy/ok', {
+      const response = await fetch('http://localhost:8080/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -319,16 +319,25 @@ const styles: { [key: string]: React.CSSProperties } = {
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '8px 12px',
-    borderBottom: '1px solid #e0e0e0',
-    backgroundColor: '#cff8ff',
+    padding: '12px 16px',
+    borderBottom: '1px solid #bae6fd',
+    backgroundColor: '#f0f9ff',
     borderRadius: '8px 8px 0 0',
   },
-  headerName: { fontWeight: 600, fontSize: '14px' },
+  headerName: {
+    fontWeight: 700,
+    fontSize: '15px',
+    color: '#0c4a6e',
+    letterSpacing: '0.3px',
+    textShadow: '0 1px 2px rgba(12, 74, 110, 0.15)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
   headerIcons: {
     display: 'flex',
     gap: '12px',
-    color: '#666',
+    color: '#0ea5e9', // text-sky-500 (matches toggleBtn text)
     cursor: 'pointer',
   },
   body: { padding: '16px', height: '300px', overflowY: 'auto' },
