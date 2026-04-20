@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import ChatBubble from '../atom/ChatBubble';
-import type { ChatBubbleProps } from '../atom/ChatBubble';
 import ErrorCard from '../atom/ErrorCard';
 import ProgressBar from '../atom/ProgressBar';
-import { API_CONFIG } from '../assets/constant/api';
-import { checkChatLimit } from '../util/ChatUtil';
+import useChat from '../customHook/useChat';
 
 import styles, { fadeInCSS, pulseCss } from './MessageWindow.style';
 
@@ -13,15 +11,24 @@ const MessageWindow: React.FC = () => {
   const isHome = useLocation().pathname.replace('/', '') === '';
 
   const [input, setInput] = useState<string>('');
-  const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
 
   const isFirstLoad = useRef<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const {
+    isLoading,
+    messages,
+    setMessages,
+    errorMessage,
+    setErrorMessage,
+    handleSend,
+  } = useChat();
+
+  const onClickSend = () => {
+    handleSend(input, () => setInput(''));
+  };
 
   const handleToggleOpen = () => {
     setHasUnreadMessage(false);
@@ -32,69 +39,10 @@ const MessageWindow: React.FC = () => {
     setInput(event.target.value);
   };
 
-  const handleSend = async () => {
-    if (!input) {
-      return;
-    }
-
-    try {
-      checkChatLimit();
-
-      setMessages((prev) => [...prev, { isSender: true, text: input }]);
-      const currentInput = input;
-      setErrorMessage('');
-      setInput('');
-      setIsLoading(true);
-
-      const pastMessages = [];
-      for (let i = 0; i < messages.length; i += 2) {
-        if (messages[i] && messages[i + 1]) {
-          const messagePair = {
-            userMessage: messages[i].text,
-            aiMessage: messages[i + 1].text,
-          };
-          pastMessages.push(messagePair);
-        }
-      }
-
-      const requestBody = {
-        prompt: currentInput,
-        pastMessages: pastMessages,
-      };
-
-      const response = await fetch(API_CONFIG.baseUrl + '/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      const extractedText = await response.text();
-
-      if (response.ok) {
-        setMessages((prev) => [
-          ...prev,
-          { isSender: false, text: extractedText },
-        ]);
-      } else {
-        throw new Error(extractedText);
-      }
-    } catch (err) {
-      if (err instanceof Error) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage('An unexpected error occurred');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      onClickSend();
     }
   };
 
@@ -189,7 +137,7 @@ const MessageWindow: React.FC = () => {
                 style={
                   isLoading ? styles.sendIconBtnDisabled : styles.sendIconBtn
                 }
-                onClick={handleSend}
+                onClick={onClickSend}
                 disabled={isLoading}
               >
                 ➤
