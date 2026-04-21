@@ -45,6 +45,7 @@ export default function useChat() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-App-Platform-Id': import.meta.env.VITE_HANDSHAKE,
         },
         body: JSON.stringify(requestBody),
       });
