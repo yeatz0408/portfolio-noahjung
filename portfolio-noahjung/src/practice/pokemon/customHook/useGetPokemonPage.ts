@@ -1,13 +1,5 @@
 import {useState, useEffect} from 'react';
-
-export interface PokemonInfo {
-  id: number;
-  name: string;
-  imgSrcFront: string;
-  imgSrcBack: string;
-  types: string[];
-  moves?: string[];
-}
+import type { PokemonInfo } from '../interface/pokemon';
 
 export interface PokemonPageResult {
     isFetching: boolean;

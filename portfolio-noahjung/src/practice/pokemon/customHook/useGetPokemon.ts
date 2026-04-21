@@ -1,22 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
+import type { PokemonInfo } from '../interface/pokemon';
 
 export interface PokemonResult {
   isFetching: boolean;
-  data: PokemonInfo | undefined;
+  data: PokemonInfo[] | undefined;
   error?: Error | undefined;
 }
 
-export interface PokemonInfo {
-  id: number;
-  name: string;
-  types: string[];
-  moves?: string[];
-  evolutionChain?: string[];
-  imgSrc?: string;
-}
-
 const useGetPokemon = (pokemonId: number): PokemonResult => {
-  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<PokemonInfo | undefined>(undefined);
   const [error, setError] = useState<Error | undefined>(undefined);
 
@@ -24,7 +16,7 @@ const useGetPokemon = (pokemonId: number): PokemonResult => {
 
     let isMounted = true;
 
-    setIsFetching(true);
+    setIsLoading(true);
     setData(undefined);
     setError(undefined);
 
@@ -40,7 +32,7 @@ const useGetPokemon = (pokemonId: number): PokemonResult => {
         }
       } finally {
         if (isMounted) {
-          setIsFetching(false);
+          setIsLoading(false);
         }
       }
     }
@@ -50,8 +42,8 @@ const useGetPokemon = (pokemonId: number): PokemonResult => {
   }, [pokemonId]);
 
   return useMemo(() => {
-    return {isFetching, data, error};
-  }, [isFetching, data, error])
+    return {isFetching: isLoading, data, error};
+  }, [isLoading, data, error])
 }
 
 async function getPokemon(pokemonId: number): Promise<PokemonInfo> {
