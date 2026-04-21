@@ -32,6 +32,12 @@ const Pokemon: React.FC = () => {
       setIsSearchResult(false);
       return;
     }
+
+    if (searchInput.length >= 1 && searchInput.length <= 2) {
+      alert('Please enter at least 3 characters.');
+      return;
+    }
+
     setIsSearchResult(true);
     searchPokemon(searchInput!);
   };

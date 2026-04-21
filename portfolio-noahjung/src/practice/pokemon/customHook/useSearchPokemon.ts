@@ -15,32 +15,37 @@ const useSearchPokemon = () => {
         try {
             setIsLoading(true);
 
-            console.log("executing Search API");
-            const searchRes = await fetch(POKEMON_API_URL + pokemonName);
-            const searchData = await searchRes.json();
+            const targetPokemon = nameList.filter((pn: string) => pn.includes(pokemonName));
 
-            const types = searchData.types.map((type: { type: { name: string } }) => type.type.name);
-            const moves = searchData.moves
-                            .filter((move: {
-                                version_group_details: { 
-                                    version_group: { name: string } }[];}) => 
-                                        move.version_group_details.some(
-                                            (vgd) => vgd.version_group.name.includes(LETS_GO)))
-                                            .map((filteredMove: { move: { name: string } }) => filteredMove.move.name);
-            const pokemonInfo = {
-                id: searchData.id,
-                name: searchData.name,
-                imgSrcFront: searchData.sprites.front_default,
-                imgSrcBack: searchData.sprites.back_default,
-                types: types,
-                moves: moves,
-            };
+            console.log("executing Search API");
+
+            const batchSearch = await Promise.all(targetPokemon.map(tp => fetch(POKEMON_API_URL + tp)));
+            const batchData = await Promise.all(batchSearch.map(s => s.json()));
+
+            const batchInfo = batchData.map(pokemonData => {
+                const types = pokemonData.types.map((type: { type: { name: string } }) => type.type.name);
+                const moves = pokemonData.moves
+                                .filter((move: {
+                                    version_group_details: { 
+                                        version_group: { name: string } }[];}) => 
+                                            move.version_group_details.some(
+                                                (vgd) => vgd.version_group.name.includes(LETS_GO)))
+                                                .map((filteredMove: { move: { name: string } }) => filteredMove.move.name);
+                return {
+                    id: pokemonData.id,
+                    name: pokemonData.name,
+                    imgSrcFront: pokemonData.sprites.front_default,
+                    imgSrcBack: pokemonData.sprites.back_default,
+                    types: types,
+                    moves: moves,
+                };
+            })
 
             if (currentRequestId !== lastRequestId.current) {
                 return;
             }
 
-            setData([pokemonInfo]);
+            setData(batchInfo);
         } catch (error) {
             if (currentRequestId === lastRequestId.current) {
                 setData([]);    
@@ -52,10 +57,13 @@ const useSearchPokemon = () => {
         }
     }
 
-    return {isLoading, data, error, searchPokemon};
+    const clearData = () => setData(undefined);
+
+    return {isLoading, data, clearData, error, searchPokemon};
 }
 
 const LETS_GO = 'lets-go-';
 const POKEMON_API_URL = 'https://pokeapi.co/api/v2/pokemon/';
+const nameList = ['bulbasaur', 'ivysaur', 'venusaur', 'charmander', 'charmeleon', 'charizard', 'squirtle', 'wartortle', 'blastoise', 'caterpie', 'metapod', 'butterfree', 'weedle', 'kakuna', 'beedrill', 'pidgey', 'pidgeotto', 'pidgeot', 'rattata', 'raticate', 'spearow', 'fearow', 'ekans', 'arbok', 'pikachu', 'raichu', 'sandshrew', 'sandslash', 'nidoran-f', 'nidorina', 'nidoqueen', 'nidoran-m', 'nidorino', 'nidoking', 'clefairy', 'clefable', 'vulpix', 'ninetales', 'jigglypuff', 'wigglytuff', 'zubat', 'golbat', 'oddish', 'gloom', 'vileplume', 'paras', 'parasect', 'venonat', 'venomoth', 'diglett', 'dugtrio', 'meowth', 'persian', 'psyduck', 'golduck', 'mankey', 'primeape', 'growlithe', 'arcanine', 'poliwag', 'poliwhirl', 'poliwrath', 'abra', 'kadabra', 'alakazam', 'machop', 'machoke', 'machamp', 'bellsprout', 'weepinbell', 'victreebel', 'tentacool', 'tentacruel', 'geodude', 'graveler', 'golem', 'ponyta', 'rapidash', 'slowpoke', 'slowbro', 'magnemite', 'magneton', 'farfetchd', 'doduo', 'dodrio', 'seel', 'dewgong', 'grimer', 'muk', 'shellder', 'cloyster', 'gastly', 'haunter', 'gengar', 'onix', 'drowzee', 'hypno', 'krabby', 'kingler', 'voltorb', 'electrode', 'exeggcute', 'exeggutor', 'cubone', 'marowak', 'hitmonlee', 'hitmonchan', 'lickitung', 'koffing', 'weezing', 'rhyhorn', 'rhydon', 'chansey', 'tangela', 'kangaskhan', 'horsea', 'seadra', 'goldeen', 'seaking', 'staryu', 'starmie', 'mr-mime', 'scyther', 'jynx', 'electabuzz', 'magmar', 'pinsir', 'tauros', 'magikarp', 'gyarados', 'lapras', 'ditto', 'eevee', 'vaporeon', 'jolteon', 'flareon', 'porygon', 'omanyte', 'omastar', 'kabuto', 'kabutops', 'aerodactyl', 'snorlax', 'articuno', 'zapdos', 'moltres', 'dratini', 'dragonair', 'dragonite', 'mewtwo', 'mew'];
 
 export default useSearchPokemon;
