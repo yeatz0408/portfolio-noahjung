@@ -1,6 +1,7 @@
 import { useLottie } from 'lottie-react';
+import { motion } from 'framer-motion';
 
-export interface LocationCardProps {
+interface LocationCardProps {
   city: string;
   ward: string;
   weatherObject: object;
@@ -20,7 +21,15 @@ const LocationCard = ({
   const { View } = useLottie(weatherInfo);
 
   return (
-    <div className={classes.locationContainer}>
+    <motion.div
+      initial={{ opacity: 0, x: -40, y: -40 }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{
+        duration: 0.6,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className={classes.locationContainer}
+    >
       <span className={classes.locationLabel}>Noah's Location</span>
       <div className={classes.locationContentRow}>
         <div className={classes.locationTextStack}>
@@ -29,7 +38,7 @@ const LocationCard = ({
         </div>
         <div className={classes.lottieWrapper}>{View}</div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
