@@ -41,7 +41,7 @@ export default function useChat() {
         pastMessages: pastMessages,
       };
 
-      const response = await fetch(API_CONFIG.baseUrl + '/chat', {
+      const response = await fetch(API_CONFIG.baseUrl + '/v1/ai/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

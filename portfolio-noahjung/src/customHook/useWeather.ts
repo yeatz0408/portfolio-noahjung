@@ -47,7 +47,7 @@ const useWeather = () => {
       try {
         setIsLoading(true);
 
-        const gpsRes = await fetch(API_CONFIG.baseUrl + '/gps');
+        const gpsRes = await fetch(API_CONFIG.baseUrl + '/v1/gps/gps');
         const gpsData = await gpsRes.json();
 
         const latitude = gpsData.latitude ? gpsData.latitude : 35.698;
