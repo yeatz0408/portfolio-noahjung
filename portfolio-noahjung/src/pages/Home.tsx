@@ -18,6 +18,7 @@ import zustand from '../assets/img/tech/zustand.png';
 import docker from '../assets/img/tech/docker.png';
 import aws from '../assets/img/tech/aws.png';
 import { useUIStore } from '../store/useStore';
+import Footer from '../component/footer';
 
 const Home: React.FC = () => {
   const isNavPaneOpen = useUIStore((state) => state.isNavPaneOpen);
@@ -61,6 +62,7 @@ const Home: React.FC = () => {
         <TechCarousel sizedImagesProps={techImages} />
       </div>
       <MessageWindow />
+      <Footer />
     </div>
   );
 };

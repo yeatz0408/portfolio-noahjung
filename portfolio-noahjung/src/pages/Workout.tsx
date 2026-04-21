@@ -5,6 +5,7 @@ import MessageWindow from '../component/MessageWindow';
 import gymPic from '../assets/img/workout.jpg';
 import military from '../assets/img/military.jpg';
 import ImageContainer from '../common/ImageContainer';
+import Footer from '../component/footer';
 
 interface FitnessMetric {
   category: string;
@@ -121,6 +122,7 @@ const Workout: React.FC = () => {
           />
         </div>
       </section>
+      <Footer />
     </>
   );
 };

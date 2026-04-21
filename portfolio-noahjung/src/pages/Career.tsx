@@ -4,6 +4,7 @@ import Carousel from '../component/Carousel';
 import MessageWindow from '../component/MessageWindow';
 import type { SizedTextProps } from '../component/Carousel';
 import { DEV_START_DATE } from '../assets/constant/PersonalInfo';
+import Footer from '../component/footer';
 
 interface ExperiencedTech {
   category: string;
@@ -192,6 +193,7 @@ const Career = () => {
           </table>
         </div>
       </section>
+      <Footer />
     </>
   );
 };
