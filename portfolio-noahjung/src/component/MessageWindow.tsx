@@ -6,6 +6,7 @@ import ProgressBar from '../atom/ProgressBar';
 import useChat from '../customHook/useChat';
 
 import styles, { fadeInCSS, pulseCss } from './MessageWindow.style';
+import { useLimitStore } from '../store/useStore';
 
 const MessageWindow: React.FC = () => {
   const isHome = useLocation().pathname.replace('/', '') === '';
@@ -13,9 +14,13 @@ const MessageWindow: React.FC = () => {
   const [input, setInput] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [hasUnreadMessage, setHasUnreadMessage] = useState<boolean>(false);
+  const [showTeaser, setShowTeaser] = useState<boolean>(false);
 
   const isFirstLoad = useRef<boolean>(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const { aiChatLimits } = useLimitStore.getState();
+  const { minute } = aiChatLimits;
 
   const {
     isLoading,
@@ -53,6 +58,13 @@ const MessageWindow: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTeaser(true);
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const lastMessage = messages[messages.length - 1];
     if (lastMessage && !lastMessage.isSender && !isOpen) {
       setHasUnreadMessage(true);
@@ -79,7 +91,7 @@ const MessageWindow: React.FC = () => {
         setMessages((prev) => prev.slice(0, -1));
       }
       setErrorMessage('');
-    }, 10000);
+    }, 15000);
     return () => clearTimeout(timerId);
   }, [errorMessage]);
 
@@ -151,6 +163,20 @@ const MessageWindow: React.FC = () => {
         <div>
           {isFirstLoad.current && isHome && fadeInCSS}
           {pulseCss}
+          <style>{`
+            @keyframes springIn {
+              0% { opacity: 0; transform: scale(0.3) translateY(20px); }
+              50% { opacity: 1; transform: scale(1.1) translateY(-5px); }
+              75% { transform: scale(0.95) translateY(2px); }
+              100% { opacity: 1; transform: scale(1) translateY(0px); }
+            }
+            @keyframes floatAttract {
+              0% { transform: translateY(0px); }
+              50% { transform: translateY(-8px); }
+              100% { transform: translateY(0px); }
+            }
+          `}</style>
+
           <div
             className={
               isFirstLoad.current && isHome ? 'fadeIn-messageWindow' : ''
@@ -158,6 +184,12 @@ const MessageWindow: React.FC = () => {
             style={styles.container_closed}
             onClick={handleToggleOpen}
           >
+            {!minute && showTeaser && (
+              <div className="teaser-bubble" style={styles.hoveringBubble}>
+                Ask AI about Noah? 👋
+              </div>
+            )}
+
             <div style={styles.header}>
               <div
                 style={{ display: 'flex', alignItems: 'center', gap: '6px' }}

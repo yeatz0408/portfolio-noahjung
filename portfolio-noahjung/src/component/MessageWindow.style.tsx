@@ -112,6 +112,22 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: '14px',
     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   },
+  hoveringBubble: {
+    position: 'absolute',
+    top: '-35px',
+    right: '25px',
+    backgroundColor: '#007bff',
+    color: 'white',
+    padding: '6px 12px',
+    borderRadius: '12px 12px 0 12px',
+    fontSize: '12px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    cursor: 'pointer',
+
+    transformOrigin: 'bottom right',
+    animation:
+      'springIn 0.6s ease-out forwards, floatAttract 2.5s ease-in-out infinite 0.6s',
+  },
 };
 
 export const fadeInCSS = (
