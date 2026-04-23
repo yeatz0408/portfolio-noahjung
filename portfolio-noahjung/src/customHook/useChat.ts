@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { API_CONFIG } from '../assets/constant/api';
 import type { ChatBubbleProps } from '../atom/ChatBubble';
-import { checkChatLimit } from '../util/ChatUtil';
+import { checkChatLimit, refundQuota, QuotaError } from '../util/ChatUtil';
 
 export default function useChat() {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
-    const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const handleSend = async (input: string, clearInput: () => void) => {
-    if (!input) {
+  const handleSend = async (input: string, clearInput: () => void) => {
+    if (!input) { 
       return;
     }
 
@@ -25,19 +25,19 @@ export default function useChat() {
       setErrorMessage('');
       setIsLoading(true);
 
-      const pastMessages = [];
-      for (let i = 0; i < messages.length; i += 2) {
-        if (messages[i] && messages[i + 1]) {
-          const messagePair = {
-            userMessage: messages[i].text,
-            aiMessage: messages[i + 1].text,
-          };
-          pastMessages.push(messagePair);
+      const pastMessages: { userMessage: string; aiMessage: string }[] = [];
+      let lastUserMsg = '';
+      for (const msg of messages) {
+        if (msg.isSender) {
+          lastUserMsg = msg.text;
+        } else if (lastUserMsg) {
+          pastMessages.push({ userMessage: lastUserMsg, aiMessage: msg.text });
+          lastUserMsg = ''; 
         }
       }
 
-      const requestBody = {
-        prompt: currentInput,
+      const requestBody = { 
+        prompt: currentInput, 
         pastMessages: pastMessages,
       };
 
@@ -54,24 +54,26 @@ export default function useChat() {
 
       if (response.ok) {
         setMessages((prev) => [
-          ...prev,
+          ...prev, 
           { isSender: false, text: extractedText },
         ]);
       } else {
-        throw new Error(extractedText);
+        throw new Error(extractedText); 
       }
     } catch (err) {
       if (err instanceof Error) {
         setErrorMessage(err.message);
+        if (err.name !== 'QuotaError') {
+          refundQuota();
+        }
       } else {
         setErrorMessage('An unexpected error occurred');
+        refundQuota();
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  return {
-    isLoading, messages, setMessages, errorMessage, setErrorMessage, handleSend
-  }
+  return { isLoading, messages, setMessages, errorMessage, setErrorMessage, handleSend };
 }
