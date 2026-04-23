@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import NavPane from '../component/NavPane';
 import Carousel from '../component/Carousel';
+import ProjectHistory from '../component/ProjectHistory';
+import type { ProjectHistoryData } from '../component/ProjectHistory';
 import MessageWindow from '../component/MessageWindow';
 import type { SizedTextProps } from '../component/Carousel';
 import { DEV_START_DATE } from '../assets/constant/PersonalInfo';
@@ -91,6 +93,50 @@ const Career = () => {
     },
   ];
 
+  const projectHistoryData: ProjectHistoryData[] = [
+    {
+      name: 'B2B Search Engine',
+      period: '2023.07 ~ 2024.06',
+      employer: 'RSP Corp',
+      scope: 'Requirement definition, Design, Implementation, Test',
+      background:
+        'A solution that enables search files across multiple cloud storages.',
+      features: [
+        'Implementation of search algorithm with ElasticSearch',
+        'synchronization with Google Drive using Google OAuth 2.0',
+        'Implementation of hierarchy of file paths on RDB',
+        'Stringify texts on images (OCR) -> enables search on files with texts on images',
+        'Real-time synchronization with clouds using webhooks',
+        'Access level system using OAuth 2.0 of Box and Google Drive',
+        'AI file assistant - embedding data synchronized with Box and Google Drive -> An AI chatbot that knows the content of synchronized files',
+      ],
+    },
+    {
+      name: 'Tire Sales Management',
+      period: '2024.07 ~ 2026.03',
+      employer: 'EBA Technologies',
+      scope:
+        'Requirement definition, Design, Implementation, Test, Maintenance and Operation',
+      background:
+        'Global tire manufacturer business launch in the Philippines.',
+      features: [
+        'Solely implemented the entire B2B web ordering system',
+        'System synchronization with the main management system',
+        'End-to-end testing',
+        'Infrastructure and DevOps management',
+        'Ongoing maintenance and operational support',
+      ],
+    },
+    {
+      name: "Major Carrier's Mobile Payment",
+      period: '2026.04 ~ Current',
+      employer: 'EBA Technologies',
+      scope: 'Design, Implementation, Test',
+      background:
+        'Development and enhancement of a popular Japanese smartphone payment service operated by a leading telecommunications provider.',
+    },
+  ];
+
   const experiencedTechs: ExperiencedTech[] = [
     {
       category: 'Languages',
@@ -171,206 +217,7 @@ const Career = () => {
           </div>
         </div>
       </section>
-      {/* Project History Section */}
-      <section className="mt-20">
-        <h2 className="text-2xl font-bold px-10 mb-8">Project History</h2>
-        <div className="space-y-12 mx-10">
-          {/* Project 1 */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-            <table className="w-full text-sm sm:text-base border-collapse bg-white dark:bg-gray-900">
-              <tbody>
-                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                  <th
-                    colSpan={2}
-                    className="px-6 py-5 text-left font-bold text-gray-900 dark:text-gray-100 text-xl tracking-tight"
-                  >
-                    B2B Search Engine
-                  </th>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="w-1/3 sm:w-1/5 bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Period
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    2023.07 ~ 2024.06
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Employer
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    RSP Corp
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Scope
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    Requirement definition, Design, Implementation, Test
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Background
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    A solution that enables search files across multiple cloud
-                    storages.
-                  </td>
-                </tr>
-                <tr>
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Features
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>
-                        Implementation of search algorithm with ElasticSearch
-                      </li>
-                      <li>
-                        Synchronization with Google Drive using Google OAuth 2.0
-                      </li>
-                      <li>Implementation of hierarchy of file paths on RDB</li>
-                      <li>
-                        OCR: Stringify texts on images for searchable content
-                      </li>
-                      <li>
-                        Real-time synchronization with clouds using webhooks
-                      </li>
-                      <li>
-                        Access level system using OAuth 2.0 (Box and Google
-                        Drive)
-                      </li>
-                      <li>
-                        AI file assistant: Embedding data for file-content
-                        chatbot
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          {/* Project 2 */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-            <table className="w-full text-sm sm:text-base border-collapse bg-white dark:bg-gray-900">
-              <tbody>
-                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                  <th
-                    colSpan={2}
-                    className="px-6 py-5 text-left font-bold text-gray-900 dark:text-gray-100 text-xl tracking-tight"
-                  >
-                    Tire Sales Management System
-                  </th>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="w-1/3 sm:w-1/5 bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Period
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    2024.07 ~ 2026.03
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Employer
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    EBA Technologies
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Scope
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    Requirement definition, Design, Implementation, Test,
-                    Maintenance and Operation
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Background
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    Global tire manufacturer business launch in the Philippines.
-                  </td>
-                </tr>
-                <tr>
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Features
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>
-                        Solely implemented the entire B2B web ordering system
-                      </li>
-                      <li>
-                        System synchronization with the main management system
-                      </li>
-                      <li>End-to-end testing</li>
-                      <li>Infrastructure and DevOps management</li>
-                      <li>Ongoing maintenance and operational support</li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          {/* Project 3 */}
-          <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-            <table className="w-full text-sm sm:text-base border-collapse bg-white dark:bg-gray-900">
-              <tbody>
-                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-                  <th
-                    colSpan={2}
-                    className="px-6 py-5 text-left font-bold text-gray-900 dark:text-gray-100 text-xl tracking-tight"
-                  >
-                    Major Carrier's Mobile Payment
-                  </th>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="w-1/3 sm:w-1/5 bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Period
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    2026.04 ~ Current
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Employer
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    EBA Technologies
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Scope
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    Design, Implementation, Test
-                  </td>
-                </tr>
-                <tr>
-                  <th className="bg-gray-50 dark:bg-gray-800/50 px-6 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
-                    Background
-                  </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 text-left">
-                    Development and enhancement of a popular Japanese smartphone
-                    payment service operated by a leading telecommunications
-                    provider.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      {/* Experienced Techologies Section */}
       <section className="mt-20">
         <h2 className="text-2xl font-bold px-10 mb-8">
           Experienced Technologies
@@ -395,6 +242,9 @@ const Career = () => {
           </table>
         </div>
       </section>
+      {/* Project History Section */}
+      <ProjectHistory data={projectHistoryData} />
+      {/* Footer */}
       <Footer />
     </>
   );
