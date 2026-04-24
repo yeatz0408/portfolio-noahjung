@@ -9,8 +9,14 @@ import type { PokemonInfo } from '../interface/pokemon';
 const Pokemon: React.FC = () => {
   const [pageNum, setPageNum] = useState<number>(1);
   const [isFront, setIsFront] = useState<boolean>(true);
+
   const [searchInput, setSearchInput] = useState<string>('');
   const [isSearchResult, setIsSearchResult] = useState<boolean>(false);
+
+  const [showDetail, setShowDetail] = useState<boolean>(false);
+  const [pokemonDetail, setPokemonDetail] = useState<PokemonInfo | undefined>(
+    undefined
+  );
 
   const [pageData, setPageData] = useState<PokemonInfo[]>([]);
 
@@ -46,6 +52,11 @@ const Pokemon: React.FC = () => {
     if (e.key === 'Enter') {
       handleSearch();
     }
+  };
+
+  const handleClickDetail = (pi: PokemonInfo) => {
+    setPokemonDetail(pi);
+    setShowDetail(true);
   };
 
   useEffect(() => {
@@ -103,11 +114,13 @@ const Pokemon: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4">
         {pageData &&
           pageData.map((pi) => (
-            <PokemonFrame
-              key={`${pi.id}-${pi.name}`}
-              pokemonInfo={pi}
-              isFront={isFront}
-            />
+            <div onClick={() => handleClickDetail(pi)}>
+              <PokemonFrame
+                key={`${pi.id}-${pi.name}`}
+                pokemonInfo={pi}
+                isFront={isFront}
+              />
+            </div>
           ))}
       </div>
       {!isSearchResult && (
@@ -115,6 +128,59 @@ const Pokemon: React.FC = () => {
           <Paginator pageNum={pageNum} setPageNum={setPageNum} />
         </div>
       )}
+      <PokemonDetailModal
+        showModal={showDetail}
+        setShowModal={setShowDetail}
+        pokemonDetail={pokemonDetail}
+        setPokemonDetail={setPokemonDetail}
+      />
+    </div>
+  );
+};
+
+interface PokemonDetailProps {
+  showModal: boolean;
+  setShowModal: (showModal: boolean) => void;
+
+  pokemonDetail: PokemonInfo | undefined;
+  setPokemonDetail: (pokemonInfo: PokemonInfo | undefined) => void;
+}
+
+const PokemonDetailModal: React.FC<PokemonDetailProps> = ({
+  showModal,
+  setShowModal,
+  pokemonDetail,
+  setPokemonDetail,
+}) => {
+  const handleClose = () => {
+    setPokemonDetail(undefined);
+    setShowModal(false);
+  };
+
+  if (!showModal) {
+    return null;
+  }
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      {/* Modal Container */}
+      <div className="flex flex-col w-full max-w-2xl min-h-[450px] bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden">
+        {/* Main Content Area */}
+        <h2>{pokemonDetail?.name}</h2>
+        <div className="flex-grow p-6">
+          <div>
+            <img src={pokemonDetail?.imgSrcFront} />
+          </div>
+        </div>
+
+        <div className="flex justify-end p-6 pt-0">
+          <button
+            onClick={handleClose}
+            className="px-4 py-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

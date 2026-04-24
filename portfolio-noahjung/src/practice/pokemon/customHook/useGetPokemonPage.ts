@@ -82,6 +82,49 @@ function getUrlByPage(pageNum: number) {
     return POKEMON_API_URL;
 }
 
+// FIXME: Test code. 
+async function fetchBatchMoves(moveIds: number[]) {
+  const GQL_ENDPOINT = "https://beta.pokeapi.co/graphql/v1beta";
+
+  const query = `
+    query getBatchMoves($ids: [Int!]) {
+      pokemon_v2_move(where: {id: {_in: $ids}}) {
+        id
+        name
+        power
+        accuracy
+        pp
+        pokemon_v2_type {
+          name
+        }
+        pokemon_v2_moveflavortexts(where: {language_id: {_eq: 9}}, limit: 1) {
+          flavor_text
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch(GQL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: { ids: moveIds },
+      }),
+    });
+
+    const result = await response.json();
+    return result.data.pokemon_v2_move;
+  } catch (error) {
+    console.error("Error fetching moves:", error);
+    return [];
+  }
+};
+
+
 const LETS_GO = 'lets-go-';
 
 export default useGetPokemonPage;
