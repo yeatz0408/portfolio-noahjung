@@ -69,6 +69,28 @@ const useGetPokemonPage = (pageNum: number) : PokemonPageResult => {
     return {isFetching: isFetching, data: pokemonPageInfo, error: error} 
 }
 
+function getIdsByPage(pageNum: number): number[] {
+  const toReturn: number[] = [];
+
+  let offset = 0;
+  let limit = 20;
+
+  if (pageNum !== 1) {
+    offset = (pageNum - 1) * 20;
+  }
+  if (pageNum === 8) {
+    limit = 11;
+  }
+
+  limit += offset
+  while (offset < limit) {
+    toReturn.push(offset++);
+  }
+
+  return toReturn;
+
+}
+
 function getUrlByPage(pageNum: number) {
     let offset = 0;
     let limit = 20;
@@ -83,22 +105,89 @@ function getUrlByPage(pageNum: number) {
 }
 
 // FIXME: Test code. 
-async function fetchBatchMoves(moveIds: number[]) {
-  const GQL_ENDPOINT = "https://beta.pokeapi.co/graphql/v1beta";
-
+async function getPokemonPageBatch(ids: number[]) {
   const query = `
-    query getBatchMoves($ids: [Int!]) {
-      pokemon_v2_move(where: {id: {_in: $ids}}) {
+    query getBatch($ids: [Int!]) {
+      pokemon_v2_pokemon(where: {id: {_in: $ids}}) {
         id
         name
-        power
-        accuracy
-        pp
-        pokemon_v2_type {
-          name
+        # Pokedex Entry
+        pokemon_v2_pokemonspecy {
+          pokemon_v2_pokemonspeciesflavortexts(where: {language_id: {_eq: 9}}, limit: 1) {
+            flavor_text
+          }
         }
-        pokemon_v2_moveflavortexts(where: {language_id: {_eq: 9}}, limit: 1) {
-          flavor_text
+        # Stats
+        pokemon_v2_pokemonstats {
+          base_stat
+          pokemon_v2_stat {
+            name
+          }
+        }
+        # Types
+        pokemon_v2_pokemontypes {
+          pokemon_v2_type {
+            name
+          }
+        }
+        # Moves filtered for Let's Go Eevee (version_group_id: 19)
+        pokemon_v2_pokemonmoves(where: {version_group_id: {_eq: 19}}) {
+          pokemon_v2_move {
+            name
+            power
+            pokemon_v2_type {
+              name
+            }
+            pokemon_v2_movedamageclass {
+              name
+            }
+          }
+        }
+        # Images
+        pokemon_v2_pokemonsprites {
+          sprites
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch("https://beta.pokeapi.co/graphql/v1beta", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: query,
+        variables: { ids: ids },
+      }),
+    });
+
+    return [];
+  } catch (error) {
+    console.error("Network Error:", error);
+    return [];
+  }
+}
+
+async function fetchBatchMoves(moveIds: number[]) {
+  
+
+  const query = `
+    query getBatch($ids: [Int!]) {
+      pokemon_v2_pokemon(where: {id: {_in: $ids}}) {
+        id
+        name
+        pokemon_v2_pokemontypes {
+          pokemon_v2_type {
+            name
+          }
+        }
+        pokemon_v2_pokemonmoves(limit: 5) {
+          pokemon_v2_move {
+            name
+          }
+        }
+        pokemon_v2_pokemonsprites {
+          sprites
         }
       }
     }
@@ -126,5 +215,6 @@ async function fetchBatchMoves(moveIds: number[]) {
 
 
 const LETS_GO = 'lets-go-';
+const GQL_ENDPOINT = "https://beta.pokeapi.co/graphql/v1beta";
 
 export default useGetPokemonPage;
