@@ -1,7 +1,7 @@
 import React from 'react';
 import NavPane from '../component/NavPane';
 import MessageWindow from '../component/MessageWindow';
-import Footer from '../component/footer';
+import Footer from '../component/Footer';
 
 interface TechStack {
   category: string;

@@ -6,7 +6,7 @@ import type { ProjectHistoryData } from '../component/ProjectHistory';
 import MessageWindow from '../component/MessageWindow';
 import type { SizedTextProps } from '../component/Carousel';
 import { DEV_START_DATE } from '../assets/constant/PersonalInfo';
-import Footer from '../component/footer';
+import Footer from '../component/Footer';
 
 interface ExperiencedTech {
   category: string;

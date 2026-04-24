@@ -167,4 +167,20 @@ export const pulseCss = (
         `}</style>
 );
 
+export const springInCss = (
+  <style>{`
+              @keyframes springIn {
+                0% { opacity: 0; transform: scale(0.3) translateY(20px); }
+                50% { opacity: 1; transform: scale(1.1) translateY(-5px); }
+                75% { transform: scale(0.95) translateY(2px); }
+                100% { opacity: 1; transform: scale(1) translateY(0px); }
+              }
+              @keyframes floatAttract {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-8px); }
+                100% { transform: translateY(0px); }
+              }
+            `}</style>
+);
+
 export default styles;

@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { API_CONFIG } from '../assets/constant/api';
 import { useUIStore } from '../store/useStore';
 import LocationCard from '../atom/LocationCard';
 import useWeather from '../customHook/useWeather';

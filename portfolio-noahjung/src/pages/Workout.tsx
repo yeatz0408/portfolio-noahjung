@@ -5,7 +5,7 @@ import MessageWindow from '../component/MessageWindow';
 import gymPic from '../assets/img/workout.jpg';
 import military from '../assets/img/military.jpg';
 import ImageContainer from '../common/ImageContainer';
-import Footer from '../component/footer';
+import Footer from '../component/Footer';
 
 interface FitnessMetric {
   category: string;
@@ -41,13 +41,13 @@ const Workout: React.FC = () => {
       <div className="w-full flex justify-center pt-10">
         <MessageWindow />
       </div>
-      <div className="pt-10">
+      <div>
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             Noah Jung
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-2 uppercase tracking-wider text-sm">
-            Software Engineer & Fitness Athlete
+            Software Engineer & Fitness Fanatic
           </p>
         </div>
       </div>
@@ -115,12 +115,12 @@ const Workout: React.FC = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-center py-10">
+        {/* <div className="flex justify-center py-10">
           <img
             src={military}
             className="w-1/2 h-auto rounded-lg shadow-[0_0_15px_rgba(0,255,255,0.5)] border border-white/20"
           />
-        </div>
+        </div> */}
       </section>
       <Footer />
     </>

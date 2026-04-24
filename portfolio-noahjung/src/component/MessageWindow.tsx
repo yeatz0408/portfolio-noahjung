@@ -5,7 +5,11 @@ import ErrorCard from '../atom/ErrorCard';
 import ProgressBar from '../atom/ProgressBar';
 import useChat from '../customHook/useChat';
 
-import styles, { fadeInCSS, pulseCss } from './MessageWindow.style';
+import styles, {
+  fadeInCSS,
+  pulseCss,
+  springInCss,
+} from './MessageWindow.style';
 import { useLimitStore } from '../store/useStore';
 
 const MessageWindow: React.FC = () => {
@@ -86,10 +90,12 @@ const MessageWindow: React.FC = () => {
     if (!isOpen) {
       setHasUnreadMessage(true);
     }
+
+    if (messages[messages.length - 1].isSender) {
+      setMessages((prev) => prev.slice(0, -1));
+    }
+
     const timerId = setTimeout(() => {
-      if (messages[messages.length - 1].isSender) {
-        setMessages((prev) => prev.slice(0, -1));
-      }
       setErrorMessage('');
     }, 15000);
     return () => clearTimeout(timerId);
@@ -104,7 +110,12 @@ const MessageWindow: React.FC = () => {
           <div style={styles.header}>
             <span style={styles.headerName}>{ASSISTANT_NAME}</span>
             <div>
-              <span onClick={() => handleToggleOpen()}>✕</span>
+              <button
+                className={'cursor-pointer'}
+                onClick={() => handleToggleOpen()}
+              >
+                ✕
+              </button>
             </div>
           </div>
 
@@ -163,19 +174,7 @@ const MessageWindow: React.FC = () => {
         <div>
           {isFirstLoad.current && isHome && fadeInCSS}
           {pulseCss}
-          <style>{`
-            @keyframes springIn {
-              0% { opacity: 0; transform: scale(0.3) translateY(20px); }
-              50% { opacity: 1; transform: scale(1.1) translateY(-5px); }
-              75% { transform: scale(0.95) translateY(2px); }
-              100% { opacity: 1; transform: scale(1) translateY(0px); }
-            }
-            @keyframes floatAttract {
-              0% { transform: translateY(0px); }
-              50% { transform: translateY(-8px); }
-              100% { transform: translateY(0px); }
-            }
-          `}</style>
+          {springInCss}
 
           <div
             className={
