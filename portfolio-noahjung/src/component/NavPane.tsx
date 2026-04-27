@@ -33,6 +33,10 @@ const NavPane: React.FC = () => {
       uri: 'about',
       label: 'About this site',
     },
+    {
+      uri: 'contact',
+      label: 'Contact Info',
+    },
   ];
 
   const handleRouting = (info: SiteMapInfo) => {
