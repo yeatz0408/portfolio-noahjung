@@ -61,3 +61,25 @@ export const useLimitStore = create<LimitStore>()(
     { name: "limit-store" }
   )
 );
+
+type LocationState = {
+    city: string;
+    ward: string;
+    setCity: (city: string) => void;
+    setWard: (ward: string) => void;
+}
+
+export const useLocationStore = create<LocationState>()((set) => ({
+    city: "",
+    ward: "",
+
+    setCity: (city) => 
+        set(() => ({ 
+            city 
+        })),
+
+    setWard: (ward) => 
+        set(() => ({ 
+            ward 
+        })),
+}));

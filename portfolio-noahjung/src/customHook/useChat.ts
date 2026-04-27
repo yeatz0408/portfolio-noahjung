@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { API_CONFIG } from '../assets/constant/api';
 import type { ChatBubbleProps } from '../atom/ChatBubble';
 import { checkChatLimit, refundQuota, QuotaError } from '../util/ChatUtil';
+import { useLocationStore } from '../store/useStore';
 
 export default function useChat() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [messages, setMessages] = useState<ChatBubbleProps[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const city = useLocationStore((state) => state.city);
+  const ward = useLocationStore((state) => state.ward);
 
   const handleSend = async (input: string, clearInput: () => void) => {
     if (!input) { 
@@ -39,6 +42,8 @@ export default function useChat() {
       const requestBody = { 
         prompt: currentInput, 
         pastMessages: pastMessages,
+        currentLocationCity: city,
+        currentLocationWard: ward,
       };
 
       const response = await fetch(API_CONFIG.baseUrl + '/v1/ai/chat', {

@@ -13,6 +13,7 @@ import rainyDay from '../assets/img/weather/rainy-day.json';
 import rainyNight from '../assets/img/weather/rainy-night.json';
 import snowyDay from '../assets/img/weather/snowy-day.json';
 import snowyNight from '../assets/img/weather/snowy-night.json';
+import { useLocationStore } from '../store/useStore';
 
 interface WeatherEntry {
   day: object;
@@ -39,6 +40,10 @@ const useWeather = () => {
     ward: string;
     weather: object;
   } | null>(null);
+
+  const setCity = useLocationStore((state) => state.setCity);
+  const setWard = useLocationStore((state) => state.setWard);
+  
 
   useEffect(() => {
     let isActive = true;
@@ -75,6 +80,9 @@ const useWeather = () => {
           areaData.address['ISO3166-2-lvl4'] === 'JP-13'
             ? areaData.address.city
             : areaData.address.neighbourhood.split(' ')[0];
+
+        setCity(city);
+        setWard(ward);
 
         const match = weatherMap[weatherData.current_weather.weathercode] ?? weatherMap[3];
         const weatherObject = weatherData.current_weather.is_day ? match?.day : match?.night;
