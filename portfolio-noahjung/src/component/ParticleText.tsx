@@ -22,7 +22,7 @@ const ParticleText: React.FC<ParticleTextProps> = ({ text }) => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     ctx.fillStyle = '#3b82f6';
-    ctx.font = "bold 37.5px 'Baloo 2', 'Sniglet', 'Varela Round', sans-serif";
+    ctx.font = "bold 30px 'Baloo 2', 'Sniglet', 'Varela Round', sans-serif";
     ctx.textAlign = 'center';
     ctx.shadowBlur = 2;
     ctx.shadowColor = 'black';
