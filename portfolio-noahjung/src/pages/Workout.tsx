@@ -3,7 +3,6 @@ import NavPane from '../component/NavPane';
 import MessageWindow from '../component/MessageWindow';
 
 import gymPic from '../assets/img/workout.jpg';
-import military from '../assets/img/military.jpg';
 import ImageContainer from '../common/ImageContainer';
 import Footer from '../component/Footer';
 
@@ -68,7 +67,7 @@ const Workout: React.FC = () => {
 
         <div className="grid md:grid-cols-2 gap-8 pt-4">
           <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-600 mb-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-[#0c4a6e] mb-2">
               Daily Routine
             </h3>
             <p className="mb-4">
@@ -79,7 +78,7 @@ const Workout: React.FC = () => {
           </div>
 
           <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-purple-600 mb-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-[#0c4a6e] mb-2">
               Training Philosophy
             </h3>
             <p>

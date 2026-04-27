@@ -22,9 +22,10 @@ const ParticleText: React.FC<ParticleTextProps> = ({ text }) => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     ctx.fillStyle = 'black';
-    ctx.font =
-      "bold 60px 'Rounded Mplus 1c', 'Kosugi Maru', 'Quicksand', sans-serif";
+    ctx.font = "bold 50px 'Baloo 2', 'Sniglet', 'Varela Round', sans-serif";
     ctx.textAlign = 'center';
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = 'black';
     ctx.fillText(text, canvas.width / 2, canvas.height / 2);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
