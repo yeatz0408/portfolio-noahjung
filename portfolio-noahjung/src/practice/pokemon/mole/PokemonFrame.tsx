@@ -1,24 +1,5 @@
-import type { PokemonInfo } from '../customHook/useGetPokemonPage';
-
-const typeColors: Record<string, string> = {
-  normal: 'bg-stone-400',
-  fire: 'bg-orange-400',
-  water: 'bg-blue-400',
-  grass: 'bg-green-400',
-  electric: 'bg-yellow-400',
-  ice: 'bg-cyan-400',
-  fighting: 'bg-red-400',
-  poison: 'bg-purple-400',
-  ground: 'bg-amber-600',
-  flying: 'bg-sky-400',
-  psychic: 'bg-pink-400',
-  bug: 'bg-lime-500',
-  rock: 'bg-yellow-700',
-  ghost: 'bg-indigo-500',
-  dragon: 'bg-amber-500',
-  fairy: 'bg-pink-200',
-  steel: 'bg-cyan-200',
-};
+import TypeBadge from '../atom/TypeBadge';
+import type { PokemonInfo } from '../interface/pokemon';
 
 const PokemonFrame = ({
   pokemonInfo,
@@ -43,12 +24,7 @@ const PokemonFrame = ({
 
       <div className="flex gap-2 w-full justify-center">
         {pokemonInfo.types.map((type) => (
-          <span
-            key={`${pokemonInfo.id}-${type}`}
-            className={`px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white ${typeColors[type]} rounded-full`}
-          >
-            {type}
-          </span>
+          <TypeBadge typeEn={type.en} typeKr={type.kr} />
         ))}
       </div>
     </div>

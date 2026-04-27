@@ -4,9 +4,14 @@ export interface PokemonInfo {
   entry: string;
   imgSrcFront: string;
   imgSrcBack: string;
-  types: string[];
+  types: TypeInfo[];
   stats: StatInfo;
   moves: MoveInfo[];
+}
+
+export interface TypeInfo {
+  en: string;
+  kr: string;
 }
 
 export interface MoveInfo {
@@ -15,6 +20,7 @@ export interface MoveInfo {
   class: 'physical' | 'special';
   type: string;
   power: number;
+  desc: string;
 }
 
 export interface StatInfo {
@@ -30,11 +36,16 @@ export interface PokeApiPokemon {
   id: number;
   name: string;
   pokemon_v2_pokemontypes: {
-    pokemon_v2_type: { name: string}
+    pokemon_v2_type: { 
+      pokemon_v2_typenames: {name: string}[]
+    }
   }[],
   pokemon_v2_pokemonspecy: {
     pokemon_v2_pokemonspeciesflavortexts: {
       flavor_text: string
+    }[]
+    pokemon_v2_pokemonspeciesnames: {
+      name: string
     }[]
   },
   pokemon_v2_pokemonmoves: {
@@ -43,7 +54,8 @@ export interface PokeApiPokemon {
       name: string,
       power: number,
       pokemon_v2_movedamageclass: {name: 'physical' | 'special'},
-      pokemon_v2_type: {name: string}
+      pokemon_v2_type: {name: string},
+      pokemon_v2_moveflavortexts: {flavor_text: string}
     }
   }[],
   pokemon_v2_pokemonstats: {

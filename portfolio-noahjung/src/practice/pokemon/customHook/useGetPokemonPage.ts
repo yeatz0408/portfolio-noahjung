@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import type { PokeApiPokemon, PokemonInfo, StatInfo } from '../interface/pokemon';
+import type { PokeApiPokemon, PokemonInfo, StatInfo, TypeInfo } from '../interface/pokemon';
 
 export interface PokemonPageResult {
     isFetching: boolean;
@@ -26,14 +26,18 @@ const useGetPokemonPage = (pageNum: number) : PokemonPageResult => {
 
                 const data: PokeApiPokemon[] = await getPokemonPageBatch(getIdsByPage(pageNum));
                 const pokemonInfos: PokemonInfo[] = data.map((pokemonData) => {
-                  const types = pokemonData.pokemon_v2_pokemontypes.map((type) => type.pokemon_v2_type.name);
+                  const types: TypeInfo[] = pokemonData.pokemon_v2_pokemontypes.map((type) => {return {
+                    en: type.pokemon_v2_type.pokemon_v2_typenames[1].name, 
+                    kr: type.pokemon_v2_type.pokemon_v2_typenames[0].name
+                  }});
                   const moves = pokemonData.pokemon_v2_pokemonmoves.map((move) => {
                     return {
                       id: move.pokemon_v2_move.id,
                       name: move.pokemon_v2_move.name,
                       class: move.pokemon_v2_move.pokemon_v2_movedamageclass.name,
                       type: move.pokemon_v2_move.pokemon_v2_type.name,
-                      power: move.pokemon_v2_move.power
+                      power: move.pokemon_v2_move.power,
+                      desc: move.pokemon_v2_move.pokemon_v2_moveflavortexts.flavor_text
                     }
                   });
 
@@ -52,7 +56,7 @@ const useGetPokemonPage = (pageNum: number) : PokemonPageResult => {
 
                   return {
                     id: pokemonData.id,
-                    name: pokemonData.name,
+                    name: pokemonData.pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesnames[0].name,
                     entry: pokemonData.pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesflavortexts[0].flavor_text,
                     imgSrcFront: pokemonData.pokemon_v2_pokemonsprites[0].sprites.front_default,
                     imgSrcBack: pokemonData.pokemon_v2_pokemonsprites[0].sprites.back_default,
@@ -105,48 +109,66 @@ function getIdsByPage(pageNum: number): number[] {
 async function getPokemonPageBatch(ids: number[]): Promise<PokeApiPokemon[]> {
   const query = `
     query getBatch($ids: [Int!]) {
-      pokemon_v2_pokemon(where: {id: {_in: $ids}}) {
-        id
-        name
-        # Pokedex Entry
-        pokemon_v2_pokemonspecy {
-          pokemon_v2_pokemonspeciesflavortexts(where: {language_id: {_eq: 9}}, limit: 1) {
-            flavor_text
-          }
+    pokemon_v2_pokemon(where: {id: {_in: $ids}}) {
+      id
+      name
+      # Pokedex Entry - Changed language_id to 3 for Korean
+      pokemon_v2_pokemonspecy {
+        pokemon_v2_pokemonspeciesflavortexts(where: {language_id: {_eq: 3}}, limit: 1) {
+          flavor_text
         }
-        # Stats
-        pokemon_v2_pokemonstats {
+        # Adding Korean Names for the Species
+        pokemon_v2_pokemonspeciesnames(where: {language_id: {_eq: 3}}) {
+          name
+        }
+      }
+      # Stats
+      pokemon_v2_pokemonstats {
           base_stat
           pokemon_v2_stat {
             name
           }
         }
-        # Types
-        pokemon_v2_pokemontypes {
-          pokemon_v2_type {
+      # Types
+      pokemon_v2_pokemontypes {
+        pokemon_v2_type {
+          # Adding Korean Names for Types
+          pokemon_v2_typenames(where: {language_id: {_in: [3, 9]}}) {
             name
           }
-        }
-        # Moves filtered for Let's Go Eevee (version_group_id: 19)
-        pokemon_v2_pokemonmoves(where: {version_group_id: {_eq: 19}}) {
-          pokemon_v2_move {
-            id
-            name
-            power
-            pokemon_v2_type {
-              name
-            }
-            pokemon_v2_movedamageclass {
-              name
-            }
-          }
-        }
-        # Images
-        pokemon_v2_pokemonsprites {
-          sprites
         }
       }
+      # Moves
+      pokemon_v2_pokemonmoves(where: {version_group_id: {_eq: 19}}) {
+        pokemon_v2_move {
+          id
+          # Adding Korean Names for Moves
+          pokemon_v2_movenames(where: {language_id: {_eq: 3}}) {
+            name
+          }
+          power
+          pokemon_v2_type {
+            pokemon_v2_typenames(where: {language_id: {_eq: 3}}) {
+              name
+            }
+          }
+          pokemon_v2_movedamageclass {
+            # Adding Korean Names for Damage Class (Physical/Special)
+            pokemon_v2_movedamageclassnames(where: {language_id: {_eq: 3}}) {
+              name
+            }
+          }
+          # Move Flavor Text - Changed language_id to 3
+          pokemon_v2_moveflavortexts(where: {language_id: {_eq: 3}}, limit: 1) {
+            flavor_text
+          }
+        }
+      }
+      pokemon_v2_pokemonsprites {
+        sprites
+      }
     }
+  }
   `;
 
   try {

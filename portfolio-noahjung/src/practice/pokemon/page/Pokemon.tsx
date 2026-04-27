@@ -5,6 +5,8 @@ import PokemonFrame from '../mole/PokemonFrame';
 import Paginator from '../mole/Paginator';
 import useSearchPokemon from '../customHook/useSearchPokemon';
 import type { PokemonInfo } from '../interface/pokemon';
+import TypeBadge from '../atom/TypeBadge';
+import PokemonDetailModal from '../modal/PokemonDetailModal';
 
 const Pokemon: React.FC = () => {
   const [pageNum, setPageNum] = useState<number>(1);
@@ -134,53 +136,6 @@ const Pokemon: React.FC = () => {
         pokemonDetail={pokemonDetail}
         setPokemonDetail={setPokemonDetail}
       />
-    </div>
-  );
-};
-
-interface PokemonDetailProps {
-  showModal: boolean;
-  setShowModal: (showModal: boolean) => void;
-
-  pokemonDetail: PokemonInfo | undefined;
-  setPokemonDetail: (pokemonInfo: PokemonInfo | undefined) => void;
-}
-
-const PokemonDetailModal: React.FC<PokemonDetailProps> = ({
-  showModal,
-  setShowModal,
-  pokemonDetail,
-  setPokemonDetail,
-}) => {
-  const handleClose = () => {
-    setPokemonDetail(undefined);
-    setShowModal(false);
-  };
-
-  if (!showModal) {
-    return null;
-  }
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      {/* Modal Container */}
-      <div className="flex flex-col w-full max-w-2xl min-h-[450px] bg-white rounded-xl border border-gray-200 shadow-2xl overflow-hidden">
-        {/* Main Content Area */}
-        <h2>{pokemonDetail?.name}</h2>
-        <div className="flex-grow p-6">
-          <div>
-            <img src={pokemonDetail?.imgSrcFront} />
-          </div>
-        </div>
-
-        <div className="flex justify-end p-6 pt-0">
-          <button
-            onClick={handleClose}
-            className="px-4 py-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
-          >
-            Close
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
