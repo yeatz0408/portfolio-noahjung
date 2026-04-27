@@ -192,7 +192,7 @@ const Career = () => {
 
         <div className="grid md:grid-cols-2 gap-8 pt-4">
           <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-[#0c4a6e] mb-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-[#3b82f6] mb-2">
               Experience
             </h3>
             <p className="mb-4">
@@ -204,7 +204,7 @@ const Career = () => {
           </div>
 
           <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-[#0c4a6e] mb-2">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-[#3b82f6] mb-2">
               Scope
             </h3>
             <p>
