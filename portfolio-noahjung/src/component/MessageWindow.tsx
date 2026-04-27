@@ -101,6 +101,33 @@ const MessageWindow: React.FC = () => {
     return () => clearTimeout(timerId);
   }, [errorMessage]);
 
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (
+      lastMessage &&
+      !lastMessage.isSender &&
+      lastMessage.isNew &&
+      !isLoading
+    ) {
+      const animationDuration = lastMessage.text.length * 30;
+
+      const timerId = setTimeout(() => {
+        setMessages((prev) => {
+          const updated = [...prev];
+          if (updated[updated.length - 1]) {
+            updated[updated.length - 1] = {
+              ...updated[updated.length - 1],
+              isNew: false,
+            };
+          }
+          return updated;
+        });
+      }, animationDuration);
+
+      return () => clearTimeout(timerId);
+    }
+  }, [messages, isLoading]);
+
   return (
     <>
       {isOpen ? (
@@ -121,11 +148,21 @@ const MessageWindow: React.FC = () => {
 
           {/* Message Area */}
           <div style={styles.message}>
-            {messages.map((message, idx) => (
-              <div key={`${idx}`}>
-                <ChatBubble isSender={message.isSender} text={message.text} />
-              </div>
-            ))}
+            {messages.map((message, idx) => {
+              const isLastMessage = idx === messages.length - 1;
+              const isAnimating =
+                isLastMessage && !message.isSender && !isLoading;
+              return (
+                <div key={`${idx}`}>
+                  <ChatBubble
+                    isSender={message.isSender}
+                    text={message.text}
+                    isAnimating={isAnimating}
+                    isNew={message.isNew}
+                  />
+                </div>
+              );
+            })}
             {isLoading && (
               <ChatBubble isSender={false} text={''} isLoading={true} />
             )}

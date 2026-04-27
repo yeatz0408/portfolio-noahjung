@@ -1,17 +1,35 @@
+import { useEffect, useRef } from 'react';
+import useTypewriterEffect from '../customHook/useTypewriterEffect';
+
 export interface ChatBubbleProps {
   isSender: boolean;
   text: string;
   isLoading?: boolean;
+  isAnimating?: boolean;
+  isNew?: boolean;
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({
   isSender,
   text,
   isLoading,
+  isAnimating,
+  isNew,
 }) => {
+  const shouldAnimate = isAnimating && isNew;
+  const animatedText = useTypewriterEffect(shouldAnimate ? text : '', 30);
+  const displayText = shouldAnimate ? animatedText : text;
+  const bubbleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (shouldAnimate && bubbleRef.current) {
+      bubbleRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [displayText, shouldAnimate]);
+
   return (
     <div style={styles.container(isSender)}>
-      <div style={styles.bubble(isSender)}>
+      <div ref={bubbleRef} style={styles.bubble(isSender)}>
         {isLoading ? (
           <div style={styles.loadingContainer}>
             <style>
@@ -28,7 +46,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             <span style={{ ...styles.dot, animationDelay: '0.4s' }}>•</span>
           </div>
         ) : (
-          text
+          displayText
         )}
       </div>
     </div>

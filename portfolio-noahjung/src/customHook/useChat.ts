@@ -60,7 +60,7 @@ export default function useChat() {
       if (response.ok) {
         setMessages((prev) => [
           ...prev, 
-          { isSender: false, text: extractedText },
+          { isSender: false, text: extractedText, isNew: true },
         ]);
       } else {
         throw new Error(extractedText); 
