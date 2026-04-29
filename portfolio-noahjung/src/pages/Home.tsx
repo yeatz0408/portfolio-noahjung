@@ -5,6 +5,8 @@ import TechCarousel from '../component/Carousel';
 import type { SizedImageProps } from '../component/Carousel';
 import NavPane from '../component/NavPane';
 import MessageWindow from '../component/MessageWindow';
+import { useUIStore } from '../store/useStore';
+import Footer from '../component/Footer';
 
 import java from '../assets/img/tech/java.jpeg';
 import springboot from '../assets/img/tech/spring_boot.png';
@@ -17,8 +19,8 @@ import mybatis from '../assets/img/tech/mybatis.jpg';
 import zustand from '../assets/img/tech/zustand.png';
 import docker from '../assets/img/tech/docker.png';
 import aws from '../assets/img/tech/aws.png';
-import { useUIStore } from '../store/useStore';
-import Footer from '../component/Footer';
+import redis from '../assets/img/tech/redis.png';
+import oci from '../assets/img/tech/oci.png';
 
 const Home: React.FC = () => {
   const isNavPaneOpen = useUIStore((state) => state.isNavPaneOpen);
@@ -35,6 +37,7 @@ const Home: React.FC = () => {
 
   const techImages: SizedImageProps[] = [
     { src: aws, width: 140, height: 100 },
+    { src: oci, width: 130, height: 90 },
     { src: docker, width: 150, height: 90 },
     { src: java, width: 75, height: 100 },
     { src: springboot, width: 210, height: 90 },
@@ -43,6 +46,7 @@ const Home: React.FC = () => {
     { src: react, width: 140, height: 90 },
     { src: postgresql, width: 130, height: 105 },
     { src: elasticsearch, width: 130, height: 90 },
+    { src: redis, width: 130, height: 90 },
     { src: mybatis, width: 150, height: 90 },
     { src: zustand, width: 150, height: 90 },
   ];

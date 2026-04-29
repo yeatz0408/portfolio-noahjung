@@ -33,10 +33,10 @@ const NavPane: React.FC = () => {
       uri: 'about',
       label: 'About this site',
     },
-    {
-      uri: 'contact',
-      label: 'Contact Info',
-    },
+    // {
+    //   uri: 'contact',
+    //   label: 'Contact Info',
+    // },
   ];
 
   const handleRouting = (info: SiteMapInfo) => {
@@ -71,7 +71,7 @@ const NavPane: React.FC = () => {
               </button>
             ))}
         </div>
-        {weatherData && (
+        {weatherData && pageId !== 'contact' && (
           <LocationCard
             city={weatherData.city}
             ward={weatherData.ward}

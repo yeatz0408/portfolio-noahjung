@@ -177,7 +177,7 @@ const Career = () => {
       <div className="pt-10">
         <Carousel sizedTextProps={careerSummaryTexts} />
       </div>
-      <section className="mx-10 mt-15 space-y-8 text-gray-800 dark:text-gray-200 leading-relaxed">
+      <section className="mx-10 mt-15 space-y-8 text-gray-800 leading-relaxed">
         <div className="pl-6">
           <p>
             Noah Jung is a full-stack web developer with experience in both
@@ -191,7 +191,7 @@ const Career = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 pt-4">
-          <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
+          <div className="bg-gray-50 p-6 rounded-lg">
             <h3 className="text-sm font-bold uppercase tracking-widest text-[#3b82f6] mb-2">
               Experience
             </h3>
@@ -203,7 +203,7 @@ const Career = () => {
             </p>
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
+          <div className="bg-gray-50 p-6 rounded-lg">
             <h3 className="text-sm font-bold uppercase tracking-widest text-[#3b82f6] mb-2">
               Scope
             </h3>
@@ -222,18 +222,18 @@ const Career = () => {
         <h2 className="text-2xl font-bold px-10 mb-8">
           Experienced Technologies
         </h2>
-        <div className="overflow-hidden mx-10 my-10 rounded-xl border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-sm sm:text-base border-collapse bg-white dark:bg-gray-900">
+        <div className="overflow-hidden mx-10 my-10 rounded-xl border border-gray-200">
+          <table className="w-full text-sm sm:text-base border-collapse bg-white">
             <tbody>
               {experiencedTechs.map((tech: ExperiencedTech, ind: number) => (
                 <tr
                   key={`${ind}-${tech.category}`}
-                  className="border-b last:border-b-0 border-gray-200 dark:border-gray-700 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                  className="border-b last:border-b-0 border-gray-200 transition-colors hover:bg-gray-50"
                 >
-                  <th className="w-1/4 sm:w-1/5 bg-gray-50 dark:bg-gray-800/50 px-4 py-4 font-bold text-gray-900 dark:text-gray-100 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
+                  <th className="w-1/4 sm:w-1/5 bg-gray-50 px-4 py-4 font-bold text-gray-900 text-left align-top uppercase tracking-wider text-[11px] sm:text-xs">
                     {tech.category}
                   </th>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <td className="px-6 py-4 text-gray-700 leading-relaxed">
                     {tech.techs}
                   </td>
                 </tr>

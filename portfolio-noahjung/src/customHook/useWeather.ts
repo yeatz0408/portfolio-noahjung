@@ -22,6 +22,7 @@ interface WeatherEntry {
 const weatherMap: Record<number, WeatherEntry> = {
   0: {day: sunny, night: night},
   3: {day: cloudy, night: cloudy},
+  55: {day: rainyDay, night: rainyNight},
   61: {day: rainyDay, night: rainyNight},
   62: {day: rainyDay, night: rainyNight},
   63: {day: rainyDay, night: rainyNight},
@@ -47,11 +48,12 @@ const useWeather = () => {
   useEffect(() => {
     let isActive = true;
 
+    const apiBaseUrl = API_CONFIG.baseUrl ? API_CONFIG.baseUrl.replace(/\/$/, '') : '';
     const loadCard = async () => {
       try {
         setIsLoading(true);
 
-        const gpsRes = await fetch(API_CONFIG.baseUrl + '/v1/gps/gps');
+        const gpsRes = await fetch(`${apiBaseUrl}/v1/gps/gps`);
         const gpsData = await gpsRes.json();
 
         const latitude = gpsData.latitude ? gpsData.latitude : 35.698;

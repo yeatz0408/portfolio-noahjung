@@ -4,6 +4,8 @@ import type { ChatBubbleProps } from '../atom/ChatBubble';
 import { checkChatLimit, refundQuota } from '../util/ChatUtil';
 import { useLocationStore } from '../store/useStore';
 
+const apiBaseUrl = API_CONFIG.baseUrl ? API_CONFIG.baseUrl.replace(/\/$/, '') : '';
+
 export default function useChat() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,7 +48,7 @@ export default function useChat() {
         currentLocationWard: ward,
       };
 
-      const response = await fetch(API_CONFIG.baseUrl + '/v1/ai/chat', {
+      const response = await fetch(`${apiBaseUrl}/v1/ai/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
